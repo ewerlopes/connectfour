@@ -17,6 +17,11 @@ class Game:
         self.red_chip = utils.load_image('red_chip.png')
         self.yellow_chip = utils.load_image('yellow_chip.png')
 
+        logging.info('Loading sounds')
+
+        self.falling = utils.load_sound('falling.wav')
+        self.column_change = utils.load_sound('column_change.wav')
+
         self.player_controlled_chip = None
         self.player_controlled_chip_rect = None
 
@@ -37,16 +42,12 @@ class Game:
             utils.try_quit(event)
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    logging.info('Left arrow')
-
-                    if self.player_controlled_chip_rect.x - config.IMAGES_SIDE_SIZE >= 0:
-                        self.player_controlled_chip_rect.x -= config.IMAGES_SIDE_SIZE
-                elif event.key == pygame.K_RIGHT:
-                    logging.info('Right arrow')
-
-                    if self.player_controlled_chip_rect.x + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0] - config.IMAGES_SIDE_SIZE:
-                        self.player_controlled_chip_rect.x += config.IMAGES_SIDE_SIZE
+                if event.key == pygame.K_LEFT and self.player_controlled_chip_rect.x - config.IMAGES_SIDE_SIZE >= 0:
+                    self.player_controlled_chip_rect.x -= config.IMAGES_SIDE_SIZE
+                    self.column_change.play()
+                elif event.key == pygame.K_RIGHT and self.player_controlled_chip_rect.x + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0] - config.IMAGES_SIDE_SIZE:
+                    self.player_controlled_chip_rect.x += config.IMAGES_SIDE_SIZE
+                    self.column_change.play()
 
         self.window.blit(self.player_controlled_chip, self.player_controlled_chip_rect)
 

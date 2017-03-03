@@ -9,10 +9,22 @@ def try_quit(event):
         sys.exit()
 
 
-def load_image(filename):
-    path = os.path.join('resources', 'images', filename)
+def _get_resource_path(res_type, filename):
+    path = os.path.join('resources', res_type, filename)
 
     if not os.path.isfile(path):
-        raise ValueError('The image ' + path + ' doesn\'t exist')
+        raise ValueError('The file ' + path + ' doesn\'t exist')
+
+    return path
+
+
+def load_image(filename):
+    path = _get_resource_path('images', filename)
 
     return pygame.image.load(path).convert_alpha()
+
+
+def load_sound(filename):
+    path = _get_resource_path('sounds', filename)
+
+    return pygame.mixer.Sound(file=path)
