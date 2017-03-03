@@ -1,3 +1,3 @@
 @ECHO off
 
-pyinstaller --onefile --clean --noconfirm --name "connectfour" run.py
+pyinstaller --onefile --clean --noconfirm --windowed --name "connectfour" run.py

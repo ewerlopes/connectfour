@@ -4,6 +4,7 @@ import game
 import utils
 import logging
 import sys
+import os
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -12,6 +13,8 @@ logging.basicConfig(
 )
 
 logging.getLogger().setLevel(logging.INFO)
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 logging.info('Initializing PyGame/{} (with SDL/{})'.format(
     pygame.version.ver,

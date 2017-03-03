@@ -28,3 +28,9 @@ def load_sound(filename):
     path = _get_resource_path('sounds', filename)
 
     return pygame.mixer.Sound(file=path)
+
+
+def load_font(filename, size):
+    path = _get_resource_path('fonts', filename)
+
+    return pygame.font.Font(path, size)

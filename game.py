@@ -25,6 +25,10 @@ class Game:
         self.column_change = utils.load_sound('column_change.wav')
         self.column_change.set_volume(config.SOUNDS_VOLUME)
 
+        logging.info('Loading fonts')
+
+        self.title_font = utils.load_font('monofur.ttf', 36)
+
         self.player_controlled_chip = None
         self.player_controlled_chip_rect = None
 
@@ -39,6 +43,8 @@ class Game:
             self.player_controlled_chip_rect = self.player_controlled_chip.get_rect()
             self.player_controlled_chip_rect.x = 0
             self.player_controlled_chip_rect.y = config.COLUMN_CHOOSING_MARGIN_TOP
+
+        self.window.blit(self.title_font.render('Red player turn', True, config.COLORS['white']), (10, 10))
 
         for event in pygame.event.get():
             utils.try_quit(event)
