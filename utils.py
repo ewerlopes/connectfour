@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+import config
 
 
 def try_quit(event):
@@ -27,7 +28,10 @@ def load_image(filename):
 def load_sound(filename):
     path = _get_resource_path('sounds', filename)
 
-    return pygame.mixer.Sound(file=path)
+    sound = pygame.mixer.Sound(file=path)
+    sound.set_volume(config.SOUNDS_VOLUME)
+
+    return sound
 
 
 def load_font(filename, size):

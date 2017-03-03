@@ -20,10 +20,7 @@ class Game:
         logging.info('Loading sounds')
 
         self.placed = utils.load_sound('placed.wav')
-        self.placed.set_volume(config.SOUNDS_VOLUME)
-
         self.column_change = utils.load_sound('column_change.wav')
-        self.column_change.set_volume(config.SOUNDS_VOLUME)
 
         logging.info('Loading fonts')
 
@@ -33,6 +30,8 @@ class Game:
         self.player_controlled_chip_rect = None
 
     def draw_board(self):
+        self.window.blit(self.title_font.render('Red player turn', True, config.COLORS['white']), (10, 10))
+
         for x in range(0, config.COLS):
             for y in range(0, config.ROWS):
                 self.window.blit(self.board_cell, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE + config.BOARD_MARGIN_TOP))
@@ -41,21 +40,32 @@ class Game:
         if not self.player_controlled_chip:
             self.player_controlled_chip = self.red_chip
             self.player_controlled_chip_rect = self.player_controlled_chip.get_rect()
-            self.player_controlled_chip_rect.x = 0
-            self.player_controlled_chip_rect.y = config.COLUMN_CHOOSING_MARGIN_TOP
-
-        self.window.blit(self.title_font.render('Red player turn', True, config.COLORS['white']), (10, 10))
+            self.player_controlled_chip_rect.left = 0
+            self.player_controlled_chip_rect.top = config.COLUMN_CHOOSING_MARGIN_TOP
 
         for event in pygame.event.get():
             utils.try_quit(event)
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT and self.player_controlled_chip_rect.x - config.IMAGES_SIDE_SIZE >= 0:
+                if event.key == pygame.K_LEFT and self.player_controlled_chip_rect.left - config.IMAGES_SIDE_SIZE >= 0:
                     self.column_change.play()
-                    self.player_controlled_chip_rect.x -= config.IMAGES_SIDE_SIZE
-                elif event.key == pygame.K_RIGHT and self.player_controlled_chip_rect.x + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0] - config.IMAGES_SIDE_SIZE:
+                    self.player_controlled_chip_rect.left -= config.IMAGES_SIDE_SIZE
+                elif event.key == pygame.K_RIGHT and self.player_controlled_chip_rect.right + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0]:
                     self.column_change.play()
-                    self.player_controlled_chip_rect.x += config.IMAGES_SIDE_SIZE
+                    self.player_controlled_chip_rect.right += config.IMAGES_SIDE_SIZE
+                elif event.key == pygame.K_DOWN:
+                    self.status = 'CHIP_FALLS'
+
+        self.window.blit(self.player_controlled_chip, self.player_controlled_chip_rect)
+
+    def make_chip_fall(self):
+        for event in pygame.event.get():
+            utils.try_quit(event)
+
+        if self.player_controlled_chip_rect.bottom + 5 <= config.WINDOW_SIZE[1]:
+            self.player_controlled_chip_rect.bottom += 5
+        else:
+            self.player_controlled_chip_rect.bottom = config.WINDOW_SIZE[1]
 
         self.window.blit(self.player_controlled_chip, self.player_controlled_chip_rect)
 
@@ -65,7 +75,7 @@ class Game:
         if self.status == 'CHOOSING_COLUMN':
             self.choose_column()
         elif self.status == 'CHIP_FALLS':
-            pass
+            self.make_chip_fall()
 
         self.draw_board()
 
