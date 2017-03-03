@@ -31,15 +31,14 @@ class Game:
     def draw_board(self):
         for x in range(0, config.COLS):
             for y in range(0, config.ROWS):
-                if y == 0: # The first line is empty
-                    continue
-
-                self.window.blit(self.board_cell, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE))
+                self.window.blit(self.board_cell, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE + config.BOARD_MARGIN_TOP))
 
     def choose_column(self):
         if not self.player_controlled_chip:
             self.player_controlled_chip = self.red_chip
             self.player_controlled_chip_rect = self.player_controlled_chip.get_rect()
+            self.player_controlled_chip_rect.x = 0
+            self.player_controlled_chip_rect.y = config.COLUMN_CHOOSING_MARGIN_TOP
 
         for event in pygame.event.get():
             utils.try_quit(event)
