@@ -25,7 +25,7 @@ logging.info('Initializing main window')
 pygame.display.set_caption('Connect Four')
 
 clock = pygame.time.Clock()
-window = pygame.display.set_mode(config.WINDOW_SIZE)
+window = pygame.display.set_mode(config.WINDOW_SIZE, pygame.DOUBLEBUF)
 game = game.Game(window, clock)
 
 pygame.display.set_icon(utils.load_image('icon.png'))

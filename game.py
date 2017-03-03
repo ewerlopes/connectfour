@@ -1,4 +1,3 @@
-from objects import *
 import pygame
 import config
 import utils
@@ -9,19 +8,20 @@ class Game:
         self.window = window
         self.clock = clock
 
-        self.window.fill((0, 0, 0))
-
         self.board_cell = utils.load_image('board_cell.png')
+        self.red_chip = utils.load_image('red_chip.png')
+        self.red_chip_rect = self.red_chip.get_rect()
 
     def play(self):
         for event in pygame.event.get():
             utils.try_quit(event)
 
-        chips = pygame.sprite.Group()
+        self.window.fill(config.COLORS['black'])
 
-        red_chip = RedChip()
-        red_chip.add(chips)
-        chips.draw(self.window)
+        if self.red_chip_rect.bottom < config.WINDOW_SIZE[1]:
+            self.red_chip_rect = self.red_chip_rect.move((0, 15))
+
+        self.window.blit(self.red_chip, self.red_chip_rect)
 
         for x in range(0, config.COLS):
             for y in range(0, config.ROWS):
