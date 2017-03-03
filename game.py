@@ -2,7 +2,6 @@ from objects import *
 import pygame
 import config
 import utils
-import os
 
 
 class Game:
@@ -12,7 +11,7 @@ class Game:
 
         self.window.fill((0, 0, 0))
 
-        self.board_cell = pygame.image.load(os.path.join('images', 'board_cell.png')).convert_alpha()
+        self.board_cell = utils.load_image('board_cell.png')
 
     def play(self):
         for event in pygame.event.get():

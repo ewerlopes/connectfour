@@ -1,9 +1,9 @@
 import pygame
 import config
 import game
+import utils
 import logging
 import sys
-import os
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -28,7 +28,7 @@ clock = pygame.time.Clock()
 window = pygame.display.set_mode(config.WINDOW_SIZE)
 game = game.Game(window, clock)
 
-pygame.display.set_icon(pygame.image.load(os.path.join('images', 'icon.png')).convert_alpha())
+pygame.display.set_icon(utils.load_image('icon.png'))
 
 logging.info('Running the game')
 

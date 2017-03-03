@@ -1,5 +1,5 @@
 import pygame
-import os
+import utils
 
 __all__ = [
     'RedChip',
@@ -16,13 +16,13 @@ class Chip(pygame.sprite.Sprite):
 
 class RedChip(Chip):
     def __init__(self):
-        self.image = pygame.image.load(os.path.join('images', 'red_chip.png')).convert_alpha()
+        self.image = utils.load_image('red_chip.png')
 
         Chip.__init__(self)
 
 
 class YellowChip(Chip):
     def __init__(self):
-        self.image = pygame.image.load(os.path.join('images', 'yellow_chip.png')).convert_alpha()
+        self.image = utils.load_image('yellow_chip.png')
 
         Chip.__init__(self)
