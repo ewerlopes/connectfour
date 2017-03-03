@@ -19,8 +19,11 @@ class Game:
 
         logging.info('Loading sounds')
 
-        self.falling = utils.load_sound('falling.wav')
+        self.placed = utils.load_sound('placed.wav')
+        self.placed.set_volume(config.SOUNDS_VOLUME)
+
         self.column_change = utils.load_sound('column_change.wav')
+        self.column_change.set_volume(config.SOUNDS_VOLUME)
 
         self.player_controlled_chip = None
         self.player_controlled_chip_rect = None
@@ -43,11 +46,11 @@ class Game:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT and self.player_controlled_chip_rect.x - config.IMAGES_SIDE_SIZE >= 0:
+                    self.column_change.play()
                     self.player_controlled_chip_rect.x -= config.IMAGES_SIDE_SIZE
-                    self.column_change.play()
                 elif event.key == pygame.K_RIGHT and self.player_controlled_chip_rect.x + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0] - config.IMAGES_SIDE_SIZE:
-                    self.player_controlled_chip_rect.x += config.IMAGES_SIDE_SIZE
                     self.column_change.play()
+                    self.player_controlled_chip_rect.x += config.IMAGES_SIDE_SIZE
 
         self.window.blit(self.player_controlled_chip, self.player_controlled_chip_rect)
 
