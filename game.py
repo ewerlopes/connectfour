@@ -19,6 +19,7 @@ class Game:
 
         self.placed_sound = utils.load_sound('placed.wav')
         self.column_change_sound = utils.load_sound('column_change.wav')
+        self.column_full_sound = utils.load_sound('column_full.wav')
 
         logging.info('Loading fonts')
 
@@ -89,8 +90,6 @@ class Game:
                     self.current_player_chip_column += 1
                 # Drop the chip in the current column
                 elif event.key == pygame.K_DOWN:
-                    self.placed_sound.play()
-
                     chip_row_stop = None
 
                     # Check all rows in the currently selected column starting from the top
@@ -104,12 +103,17 @@ class Game:
 
                     # Actually move the chip in the current column and reset the current one (to create a new one later)
                     if chip_row_stop:
+                        self.placed_sound.play()
                         self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * chip_row_stop
 
-                    self.current_player_chip = None
-                    self.current_player_chip_column = 0
-                    # It's the other player's turn
-                    self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
+                        self.current_player_chip = None
+                        self.current_player_chip_column = 0
+
+                        # It's the other player's turn
+                        self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
+                    # The column is full
+                    else:
+                        self.column_full_sound.play()
 
         self.chips.draw(self.window)
 
