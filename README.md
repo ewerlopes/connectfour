@@ -55,7 +55,7 @@ works here, so you'll have to jump yourself in the source code. Start with the e
 
 Beside the game itself, I use [PyInstaller](http://www.pyinstaller.org/) to generate the executables. It packs up all the
 game and its assets in a single executable file so players just have to run it with nothing to install. This task is
-performed by the `build.bat` file.
+performed by the `build_*` scripts to be ran in the corresponding OS.
 
 ## Credits
 

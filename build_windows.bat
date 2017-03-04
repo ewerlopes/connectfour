@@ -1,3 +1,6 @@
+REM Batch script to build the Connect Four Windows executable.
+REM The resulting "connectfour.exe" executable will be available in the "dist" directory.
+
 @ECHO off
 
 pyinstaller ^
