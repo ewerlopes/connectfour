@@ -6,8 +6,9 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
 
 ## Features
 
-  - Two players on the same computer
-  - The game itself?
+  - Two players (red and yellow) on the same computer
+  - The first player having 4 consecutive chips win
+  - Windows only at this moment
 
 ## Prerequisites
 
@@ -43,9 +44,9 @@ python run.py
 
 ## Controls
 
-  - <kbd>ESC</kbd> - quit the game
-  - <kbd>←</kbd> and <kbd>→</kbd> - moves the chip respectively to the left and to the right
-  - <kbd>↓</kbd> - drops the chip in the selected column
+  - <kbd>ESC</kbd> quits the game
+  - <kbd>←</kbd> and <kbd>→</kbd> moves the chip respectively to the left and to the right
+  - <kbd>↓</kbd> drops the chip in the selected column
 
 ## How it works
 
