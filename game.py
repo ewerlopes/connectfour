@@ -27,7 +27,9 @@ class Game:
         logging.info('Initializing game')
 
         self.chips = pygame.sprite.Group()
-        self.current_player = objects.RedPlayer()
+        self.red_player = objects.RedPlayer()
+        self.yellow_player = objects.YellowPlayer()
+        self.current_player = self.red_player # The starting player is always the red one
         self.current_player_chip = None
         self.current_player_chip_column = 0
 
@@ -42,7 +44,7 @@ class Game:
     def draw_player_turn(self):
         text = self.title_font.render(self.current_player.name + ' player turn', True, self.current_player.color)
         text_rect = text.get_rect()
-        text_rect.centerx = config.WINDOW_SIZE[0] / 2
+        text_rect.centerx = self.window.get_rect().centerx
         text_rect.y = 10
 
         self.window.blit(text, text_rect)
@@ -66,19 +68,21 @@ class Game:
             utils.try_quit(event)
 
             if event.type == pygame.KEYDOWN:
-                # Move chip to the left: before, make sure well' not go beyond the screen
+                # Move chip to the left: before, make sure we'll not go beyond the screen limits
                 if event.key == pygame.K_LEFT and self.current_player_chip.rect.left - config.IMAGES_SIDE_SIZE >= 0:
                     self.column_change_sound.play()
                     self.current_player_chip.rect.left -= config.IMAGES_SIDE_SIZE
                     self.current_player_chip_column -= 1
-                # Move chip to the right: before, make sure well' not go beyond the screen
+                # Move chip to the right: before, make sure we'll not go beyond the screen limits
                 elif event.key == pygame.K_RIGHT and self.current_player_chip.rect.right + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0]:
                     self.column_change_sound.play()
                     self.current_player_chip.rect.right += config.IMAGES_SIDE_SIZE
                     self.current_player_chip_column += 1
-                # Moving down: drop the chip in the current column
+                # Drop the chip in the current column
                 elif event.key == pygame.K_DOWN:
                     self.placed_sound.play()
+
+                    chip_row_stop = None
 
                     # Check all rows in the currently selected column starting from the top
                     for y, cell in self.board[self.current_player_chip_column].items():
@@ -86,14 +90,17 @@ class Game:
                         if not cell:
                             # If we're in the latest cell or if the next cell isn't empty
                             if (y == config.ROWS - 1) or (not y + 1 > config.ROWS - 1 and self.board[self.current_player_chip_column][y + 1]):
+                                chip_row_stop = y + 1
                                 self.board[self.current_player_chip_column][y] = self.current_player.name
 
                     # Actually move the chip in the current column and reset the current one (to create a new one later)
-                    self.current_player_chip.rect.bottom = config.WINDOW_SIZE[1]
+                    if chip_row_stop:
+                        self.current_player_chip.rect.bottom = config.IMAGES_SIDE_SIZE * chip_row_stop
+
                     self.current_player_chip = None
                     self.current_player_chip_column = 0
                     # It's the other player's turn
-                    self.current_player = objects.YellowPlayer() if isinstance(self.current_player, objects.RedPlayer) else objects.RedPlayer()
+                    self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
 
         self.chips.draw(self.window)
 
