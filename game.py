@@ -95,7 +95,7 @@ class Game:
 
                     # Actually move the chip in the current column and reset the current one (to create a new one later)
                     if chip_row_stop:
-                        self.current_player_chip.rect.bottom = config.IMAGES_SIDE_SIZE * chip_row_stop
+                        self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * chip_row_stop
 
                     self.current_player_chip = None
                     self.current_player_chip_column = 0
