@@ -25,12 +25,23 @@ class Game:
 
         self.title_font = utils.load_font('monofur.ttf', 36)
 
+        logging.info('Initializing game')
+
         self.chips = pygame.sprite.Group()
 
         self.player_controlled_chip = None
+        self.current_player = 'Red'
+
+    def draw_player_turn(self):
+        text = self.title_font.render(self.current_player + ' player turn', True, config.COLORS['white'])
+        text_rect = text.get_rect()
+        text_rect.centerx = config.WINDOW_SIZE[0] / 2
+        text_rect.y = 10
+
+        self.window.blit(text, text_rect)
 
     def draw_board(self):
-        self.window.blit(self.title_font.render('Red player turn', True, config.COLORS['white']), (10, 10))
+        self.draw_player_turn()
 
         for x in range(0, config.COLS):
             for y in range(0, config.ROWS):
@@ -38,7 +49,7 @@ class Game:
 
     def choose_column(self):
         if not self.player_controlled_chip:
-            self.player_controlled_chip = RedChip()
+            self.player_controlled_chip = RedChip() if self.current_player == 'Red' else YellowChip()
 
             self.chips.add(self.player_controlled_chip)
             self.player_controlled_chip.rect.left = 0
@@ -63,13 +74,14 @@ class Game:
         for event in pygame.event.get():
             utils.try_quit(event)
 
-        if self.player_controlled_chip.rect.bottom + 5 <= config.WINDOW_SIZE[1]:
-            self.player_controlled_chip.rect.bottom += 5
+        if self.player_controlled_chip.rect.bottom + 10 <= config.WINDOW_SIZE[1]:
+            self.player_controlled_chip.rect.bottom += 10
         else:
             self.placed_sound.play()
             self.player_controlled_chip.rect.bottom = config.WINDOW_SIZE[1]
             self.status = 'CHOOSING_COLUMN'
             self.player_controlled_chip = None
+            self.current_player = 'Yellow' if self.current_player == 'Red' else 'Red'
 
         self.chips.draw(self.window)
 
