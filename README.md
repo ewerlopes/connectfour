@@ -11,6 +11,12 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
   - Two players (of course) on the same computer
   - Sound effects
 
+## Downloads
+
+Go [here](https://github.com/EpocDotFr/connectfour/releases).
+
+There's currently Windows and Mac OS executables available.
+
 ## Prerequisites
 
 **If you are a player**:
@@ -64,10 +70,9 @@ performed by the `build_*` scripts to be ran in the corresponding OS.
   - Sound effects are from GoldenEye 007 (Copyright © 1997 Rareware)
   - [Font](http://www.dafont.com/monofur.font) by Tobias Benjamin Köhler (freeware)
 
-## Gotchas
+## Gotcha
 
-  - This is my very first game I ever crafted, and my very first projet using PyGame, so please be indulgent.
-  - Executables available for Windows only at this moment.
+This is my very first game I ever crafted, and my very first projet using PyGame, so please be indulgent.
 
 ## End words
 

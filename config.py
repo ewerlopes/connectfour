@@ -2,6 +2,8 @@ from enum import Enum
 import sys
 import os
 
+__version__ = '0.1'
+
 FPS = 60
 IMAGES_SIDE_SIZE = 112
 COLS = 7

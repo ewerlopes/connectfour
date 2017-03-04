@@ -6,7 +6,7 @@ import logging
 import sys
 import os
 
-os.environ['SDL_VIDEO_CENTERED'] = '1' # This makes the windows centered on the screen
+os.environ['SDL_VIDEO_CENTERED'] = '1' # This makes the window centered on the screen
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -25,7 +25,7 @@ pygame.init()
 
 logging.info('Initializing main window')
 
-pygame.display.set_caption('Connect Four')
+pygame.display.set_caption('Connect Four ' + config.__version__)
 
 clock = pygame.time.Clock() # Used to limit the FPS
 window = pygame.display.set_mode(config.WINDOW_SIZE, pygame.DOUBLEBUF)

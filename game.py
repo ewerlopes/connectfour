@@ -23,6 +23,7 @@ class Game:
         logging.info('Loading fonts')
 
         self.title_font = utils.load_font('monofur.ttf', 36)
+        self.normal_font = utils.load_font('monofur.ttf', 18)
 
         logging.info('Initializing game')
 
@@ -40,6 +41,14 @@ class Game:
 
             for y in range(0, config.ROWS):
                 self.board[x][y] = None
+
+    def draw_game_name(self):
+        text = self.normal_font.render('Connect Four ' + config.__version__, True, config.COLORS.WHITE.value)
+        text_rect = text.get_rect()
+        text_rect.y = 10
+        text_rect.right = self.window.get_rect().width - 10
+
+        self.window.blit(text, text_rect)
 
     def draw_player_turn(self):
         text = self.title_font.render(self.current_player.name + ' player turn', True, self.current_player.color)
@@ -105,6 +114,7 @@ class Game:
         self.chips.draw(self.window)
 
         self.draw_player_turn()
+        self.draw_game_name()
         self.draw_board()
 
         pygame.display.update()
