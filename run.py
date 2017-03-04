@@ -6,6 +6,8 @@ import logging
 import sys
 import os
 
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%d/%m/%Y %H:%M:%S',
@@ -13,8 +15,6 @@ logging.basicConfig(
 )
 
 logging.getLogger().setLevel(logging.INFO)
-
-os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 logging.info('Initializing PyGame/{} (with SDL/{})'.format(
     pygame.version.ver,
@@ -29,11 +29,12 @@ pygame.display.set_caption('Connect Four')
 
 clock = pygame.time.Clock()
 window = pygame.display.set_mode(config.WINDOW_SIZE, pygame.DOUBLEBUF)
-game = game.Game(window, clock)
 
 pygame.display.set_icon(utils.load_image('icon.png'))
 
-logging.info('Running the game')
+game = game.Game(window, clock)
+
+logging.info('Running game')
 
 while True:
     game.play()

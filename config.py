@@ -1,3 +1,4 @@
+from enum import Enum
 import sys
 import os
 
@@ -10,7 +11,9 @@ BOARD_MARGIN_TOP = IMAGES_SIDE_SIZE + COLUMN_CHOOSING_MARGIN_TOP
 WINDOW_SIZE = (IMAGES_SIDE_SIZE * COLS, (IMAGES_SIDE_SIZE * ROWS) + BOARD_MARGIN_TOP)
 SOUNDS_VOLUME = 0.5
 RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
-COLORS = {
-    'black': (0, 0, 0),
-    'white': (255, 255, 255)
-}
+
+class COLORS(Enum):
+    BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
+    RED = (255, 0, 0)
+    YELLOW = (255, 174, 0)
