@@ -1,3 +1,9 @@
 @ECHO off
 
-pyinstaller --onefile --clean --noconfirm --windowed --name "connectfour" run.py
+pyinstaller ^
+    --clean --noconfirm --onefile --windowed ^
+    --log-level=WARN ^
+    --name=connectfour ^
+    --icon="resources/images/icon.ico" ^
+    --add-data="resources;resources" ^
+    run.py
