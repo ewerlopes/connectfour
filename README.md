@@ -6,9 +6,10 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
 
 ## Features
 
-  - Two players (red and yellow) on the same computer
-  - The first player having 4 consecutive chips win
-  - Windows only at this moment
+  - All the Connect Four rules
+  - State of the art graphics
+  - Two players (of course) on the same computer
+  - Sound effects
 
 ## Prerequisites
 
@@ -65,7 +66,8 @@ performed by the `build_*` scripts to be ran in the corresponding OS.
 
 ## Gotchas
 
-This is my very first game I ever crafted, and my very first projet using PyGame, so please be indulgent.
+  - This is my very first game I ever crafted, and my very first projet using PyGame, so please be indulgent.
+  - Executables available for Windows only at this moment.
 
 ## End words
 
