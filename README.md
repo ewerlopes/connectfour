@@ -70,10 +70,10 @@ performed by the `build_*` scripts to be ran in the corresponding OS.
 
 ## Credits
 
-  - [Board graphics](https://commons.wikimedia.org/wiki/File:Puissance4_01.svg) by François Haffner (public domain)
-  - Sound effects are from GoldenEye 007 (© 1997 Rareware)
-  - Musics: [Techno Dreaming, Techno Celebration, Electric Rain and Snake Trance](http://soundimage.org/dance-techno/) by Eric Matyas (Royalty-Free)
-  - Font: [Monofur](http://www.dafont.com/monofur.font) by Tobias Benjamin Köhler (freeware)
+  - Board graphics by [François Haffner](https://commons.wikimedia.org/wiki/File:Puissance4_01.svg) (public domain)
+  - Sound effects by [Freesfx.co.uk](http://www.freesfx.co.uk/) (© Freesfx.co.uk)
+  - Musics by [SoundImage.org](http://soundimage.org/dance-techno/) (Royalty-Free)
+  - Font by [Tobias Benjamin Köhler](http://www.dafont.com/monofur.font) (freeware)
 
 ## Gotcha
 

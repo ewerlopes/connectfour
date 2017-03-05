@@ -152,7 +152,7 @@ class Game:
 
                         if self.did_i_win(self.current_player_chip_column, chip_row_stop):
                             pygame.mixer.music.pause()
-                            self.win_sound.play(loops=2)
+                            self.win_sound.play()
                             pygame.mixer.music.play(-1)
                             self.draw_player = False
 
