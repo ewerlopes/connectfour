@@ -29,7 +29,7 @@ class Game:
         logging.info('Loading fonts')
 
         self.title_font = utils.load_font('monofur.ttf', 26)
-        self.normal_font = utils.load_font('monofur.ttf', 18)
+        self.normal_font = utils.load_font('monofur.ttf', 16)
 
         logging.info('Initializing game')
 
@@ -66,21 +66,44 @@ class Game:
 
         self.window.blit(text, text_rect)
 
-    def check_direction(self, x, y, direction):
-        x += direction.value[0]
-        y += direction.value[1]
+    def compute_direction_pos(self, x, y, direction):
+        x = x + abs(direction.value[0]) if direction.value[0] > 0 else x - abs(direction.value[0])
+        y = y + abs(direction.value[1]) if direction.value[1] > 0 else y - abs(direction.value[1])
 
-        print(x, y, self.board[x][y])
+        return (x, y)
+
+    def is_valid_position(self, x, y):
+        if x < 0 or x > config.COLS - 1 or y < 0 or y > config.ROWS - 1:
+            return False
+
+        return True
+
+    def check_direction(self, count, x, y, direction):
+        direction_pos = self.compute_direction_pos(x, y, direction)
+
+        if not self.is_valid_position(direction_pos[0], direction_pos[1]):
+            logging.info('  Invalid')
+            return count
 
         if self.board[x][y] == self.current_player.name:
-            return self.check_direction(x, y, direction)
+            logging.info('  Match')
+            return self.check_direction(count + 1, x, y, direction)
         else:
-            return False
+            logging.info('  No match')
+            return count
 
     def did_i_win(self, x, y):
         for direction in config.DIRECTIONS:
-            if self.check_direction(x, y, direction):
+            logging.info(direction.name)
+
+            count = self.check_direction(0, x, y, direction)
+
+            logging.info('  {}'.format(count))
+
+            if count == 3: # There's three same chips in this direction (in addition to the one were we started)
                 return True
+
+        return False
 
     def draw_board(self):
         for x in range(0, config.COLS):
@@ -128,7 +151,7 @@ class Game:
                         self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
                         self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * chip_row_stop + 1
 
-                        if self.did_i_win(chip_row_stop, self.current_player_chip_column):
+                        if self.did_i_win(self.current_player_chip_column, chip_row_stop):
                             pygame.mixer.music.pause()
                             self.win_sound.play(loops=2)
                             pygame.mixer.music.play(-1)
