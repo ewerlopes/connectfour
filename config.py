@@ -11,8 +11,8 @@ ROWS = 6
 COLUMN_CHOOSING_MARGIN_TOP = 50
 BOARD_MARGIN_TOP = IMAGES_SIDE_SIZE + COLUMN_CHOOSING_MARGIN_TOP
 WINDOW_SIZE = (IMAGES_SIDE_SIZE * COLS, (IMAGES_SIDE_SIZE * ROWS) + BOARD_MARGIN_TOP)
-SOUNDS_VOLUME = 0.5
-MUSIC_VOLUME = 0.4
+SOUNDS_VOLUME = 0.4
+MUSIC_VOLUME = 0.2
 
 # When frozen by PyInstaller, the path to the resources is different
 RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'

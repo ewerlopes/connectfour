@@ -12,11 +12,14 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
   - Sound effects!
   - Music!
 
-## Downloads
+## Executables download
 
-Go [here](https://github.com/EpocDotFr/connectfour/releases).
+Go [here](https://github.com/EpocDotFr/connectfour/releases) to find the latest ones.
 
-There's currently Windows and Mac OS executables available.
+The following executables are currently available:
+
+  - Windows (tested on Windows 10 64 bits, Windows 7 64 bits)
+  - Mac OS (tested on Mac OS Sierra)
 
 ## Prerequisites
 
