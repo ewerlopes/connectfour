@@ -23,3 +23,14 @@ class COLORS(Enum):
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
     YELLOW = (255, 174, 0)
+
+
+class DIRECTIONS(Enum):
+    N = (0, -1)
+    NE = (1, -1)
+    E = (1, 0)
+    SE = (1, 1)
+    S = (0, 1)
+    SW = (-1, 1)
+    W = (-1, 0)
+    NW = (-1, -1)

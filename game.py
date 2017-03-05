@@ -66,8 +66,21 @@ class Game:
 
         self.window.blit(text, text_rect)
 
-    def did_i_win(self):
-        return True
+    def check_direction(self, x, y, direction):
+        x += direction.value[0]
+        y += direction.value[1]
+
+        print(x, y, self.board[x][y])
+
+        if self.board[x][y] == self.current_player.name:
+            return self.check_direction(x, y, direction)
+        else:
+            return False
+
+    def did_i_win(self, x, y):
+        for direction in config.DIRECTIONS:
+            if self.check_direction(x, y, direction):
+                return True
 
     def draw_board(self):
         for x in range(0, config.COLS):
@@ -115,7 +128,7 @@ class Game:
                         self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
                         self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * chip_row_stop + 1
 
-                        if self.did_i_win():
+                        if self.did_i_win(chip_row_stop, self.current_player_chip_column):
                             pygame.mixer.music.pause()
                             self.win_sound.play(loops=2)
                             pygame.mixer.music.play(-1)
