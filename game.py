@@ -3,7 +3,6 @@ import pygame
 import config
 import utils
 import logging
-from pprint import pprint
 
 
 class Game:
@@ -24,7 +23,7 @@ class Game:
 
         logging.info('Loading the music')
 
-        utils.load_music('bg_music.wav')
+        utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'])
 
         logging.info('Loading fonts')
 

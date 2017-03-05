@@ -1,3 +1,4 @@
+from random import choice
 import pygame
 import sys
 import os
@@ -42,6 +43,10 @@ def load_music(filename, play=True):
 
     if play:
         pygame.mixer.music.play(-1)
+
+
+def load_random_music(filenames, play=True):
+    load_music(choice(filenames), play)
 
 
 def load_font(filename, size):

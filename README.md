@@ -10,7 +10,7 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
   - State of the art graphics
   - Two players (of course) on the same computer
   - Sound effects!
-  - Music!
+  - Musics!
 
 ## Executables download
 
@@ -72,7 +72,7 @@ performed by the `build_*` scripts to be ran in the corresponding OS.
 
   - [Board graphics](https://commons.wikimedia.org/wiki/File:Puissance4_01.svg) by François Haffner (public domain)
   - Sound effects are from GoldenEye 007 (© 1997 Rareware)
-  - Music: [Techno Dreaming](http://soundimage.org/dance-techno/) by Eric Matyas (Royalty-Free)
+  - Musics: [Techno Dreaming, Techno Celebration, Electric Rain and Snake Trance](http://soundimage.org/dance-techno/) by Eric Matyas (Royalty-Free)
   - Font: [Monofur](http://www.dafont.com/monofur.font) by Tobias Benjamin Köhler (freeware)
 
 ## Gotcha
