@@ -21,6 +21,10 @@ class Game:
         self.column_change_sound = utils.load_sound('column_change.wav')
         self.column_full_sound = utils.load_sound('column_full.wav')
 
+        logging.info('Loading the music')
+
+        utils.load_music('bg_music.wav')
+
         logging.info('Loading fonts')
 
         self.title_font = utils.load_font('monofur.ttf', 36)
