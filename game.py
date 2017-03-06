@@ -27,7 +27,7 @@ class Game:
 
         logging.info('Loading fonts')
 
-        self.title_font = utils.load_font('monofur.ttf', 26)
+        self.title_font = utils.load_font('monofur.ttf', 22)
         self.normal_font = utils.load_font('monofur.ttf', 16)
 
         logging.info('Initializing game')
@@ -60,15 +60,38 @@ class Game:
     def draw_title(self, title, color):
         text = self.title_font.render(title, True, color)
         text_rect = text.get_rect()
-        text_rect.centerx = self.window.get_rect().centerx
-        text_rect.y = 20
+        text_rect.x = 10
+        text_rect.y = 10
 
         self.window.blit(text, text_rect)
 
-    def did_i_win(self):
-        """Check if the current player won the game."""
+    def is_valid_position(self, x, y):
+        if x < 0 or x > config.COLS - 1 or y < 0 or y > config.ROWS - 1:
+            return False
 
-        # Check each columns
+        return True
+
+    def compute_direction_pos(self, x, y, direction):
+        x = x + abs(direction[0]) if direction[0] > 0 else x - abs(direction[0])
+        y = y + abs(direction[1]) if direction[1] > 0 else y - abs(direction[1])
+
+        return (x, y)
+
+    def count_consecutive_diagonal_chips(self, consecutive_chips, x, y, direction):
+        direction_pos = self.compute_direction_pos(x, y, direction)
+
+        if not self.is_valid_position(direction_pos[0], direction_pos[1]):
+            return consecutive_chips
+
+        # TODO Consecutive chips count logic here
+
+    def did_i_win(self):
+        """Check if the current player win the game.
+
+        This method performs the checks on the whole board in all possible direction until 4 consecutive chips are found.
+        """
+
+        # Check each columns from left to right
         for x in range(0, config.COLS):
             consecutive_chips = 0
             previous_chip = None
@@ -91,7 +114,7 @@ class Game:
 
         logging.info('----------')
 
-        # Check each rows
+        # Check each rows from top to bottom
         for y in range(0, config.ROWS):
             consecutive_chips = 0
             previous_chip = None
@@ -111,6 +134,10 @@ class Game:
                 previous_chip = cell
 
             logging.info('Row {}: {}'.format(y + 1, consecutive_chips))
+
+        # Check each "/" diagonal starting at the top left corner
+        # for y in range(0, 5):
+        #    consecutive_chips = self.count_consecutive_diagonal_chips(0, 0, y, (1, 1))
 
         logging.info('--------------------')
 
@@ -134,7 +161,7 @@ class Game:
         return False
 
     def play(self):
-        if not self.current_player_chip:
+        if not self.current_player_chip and self.draw_player:
             self.current_player_chip = self.current_player.chip()
 
             self.chips.add(self.current_player_chip)
@@ -171,12 +198,12 @@ class Game:
                             self.win_sound.play()
                             pygame.mixer.music.play(-1)
                             self.draw_player = False
+                        else:
+                            # It's the other player's turn
+                            self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
 
                         self.current_player_chip = None
                         self.current_player_chip_column = 0
-
-                        # It's the other player's turn
-                        self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
                     # The column is full
                     else:
                         self.column_full_sound.play()

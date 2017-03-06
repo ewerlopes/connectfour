@@ -74,6 +74,7 @@ performed by the `build_*` scripts to be ran in the corresponding OS.
   - Sound effects by [Freesfx.co.uk](http://www.freesfx.co.uk/) (© Freesfx.co.uk)
   - Musics by [SoundImage.org](http://soundimage.org/dance-techno/) (Royalty-Free)
   - Font by [Tobias Benjamin Köhler](http://www.dafont.com/monofur.font) (freeware)
+  - Connect Four™ is a trademark of Milton Bradley / Hasbro
 
 ## Gotcha
 
