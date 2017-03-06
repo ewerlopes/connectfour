@@ -4,7 +4,7 @@
 pyinstaller \
     --clean --noconfirm --onefile --windowed \
     --log-level=WARN \
-    --name=connectfour \
+    --name="connectfour_mac" \
     --icon="resources/images/icon.icns" \
     --add-data="resources:resources" \
     --osx-bundle-identifier="fr.epoc.python.games.connectfour" \

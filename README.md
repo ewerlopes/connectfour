@@ -18,8 +18,8 @@ Go [here](https://github.com/EpocDotFr/connectfour/releases) to find the latest 
 
 The following executables are currently available:
 
-  - Windows (tested on Windows 10 64 bits, Windows 7 64 bits)
-  - Mac OS (tested on Mac OS Sierra)
+  - Windows (64 bits). Tested on Windows 7 / 10
+  - Mac OS (64 bits). Tested on Mac OS Sierra
 
 ## Prerequisites
 

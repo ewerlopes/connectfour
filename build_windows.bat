@@ -6,7 +6,7 @@ REM The resulting "connectfour.exe" executable will be available in the "dist" d
 pyinstaller ^
     --clean --noconfirm --onefile --windowed ^
     --log-level=WARN ^
-    --name=connectfour ^
+    --name="connectfour_windows" ^
     --icon="resources/images/icon.ico" ^
     --add-data="resources;resources" ^
     run.py

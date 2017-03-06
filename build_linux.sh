@@ -4,6 +4,6 @@
 pyinstaller \
     --clean --noconfirm --onefile \
     --log-level=WARN \
-    --name=connectfour \
+    --name="connectfour_linux" \
     --add-data="resources:resources" \
     run.py
