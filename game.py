@@ -253,9 +253,8 @@ class Game:
                         self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
                         if self.did_i_win():
-                            pygame.mixer.music.pause()
+                            pygame.mixer.music.stop()
                             self.win_sound.play()
-                            pygame.mixer.music.play(-1)
                             self.draw_player = False
                         else: # It's the other player's turn if the current player didn't win
                             self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player

@@ -31,6 +31,7 @@ clock = pygame.time.Clock() # Used to limit the FPS
 window = pygame.display.set_mode(config.WINDOW_SIZE, pygame.DOUBLEBUF)
 
 pygame.display.set_icon(utils.load_image('icon.png'))
+pygame.mouse.set_visible(False)
 
 game = game.Game(window, clock)
 
