@@ -65,57 +65,76 @@ class Game:
 
         self.window.blit(text, text_rect)
 
-    def compute_direction_pos(self, x, y, direction):
-        x = x + abs(direction.value[0]) if direction.value[0] > 0 else x - abs(direction.value[0])
-        y = y + abs(direction.value[1]) if direction.value[1] > 0 else y - abs(direction.value[1])
+    def did_i_win(self):
+        """Check if the current player won the game."""
+        consecutive_chips = 0
+        previous_chip = None
 
-        return (x, y)
+        # Check each columns
+        for x in range(0, config.COLS):
+            for y in range(0, config.ROWS):
+                cell = self.board[x][y]
 
-    def is_valid_position(self, x, y):
-        if x < 0 or x > config.COLS - 1 or y < 0 or y > config.ROWS - 1:
-            return False
+                if cell == self.current_player.name and consecutive_chips == 0:
+                    consecutive_chips = 1
+                elif cell == self.current_player.name and cell == previous_chip:
+                    consecutive_chips += 1
+                else:
+                    consecutive_chips = 0
 
-        return True
+                if consecutive_chips == 4:
+                    logging.info('Found 4 consecutive chips in column {}'.format(x + 1))
+                    return True
 
-    def check_direction(self, count, x, y, direction):
-        direction_pos = self.compute_direction_pos(x, y, direction)
+                previous_chip = cell
 
-        if not self.is_valid_position(direction_pos[0], direction_pos[1]):
-            logging.info('  Invalid')
-            return count
+            logging.info('Column {}: {}'.format(x + 1, consecutive_chips))
 
-        if self.board[x][y] == self.current_player.name:
-            logging.info('  Match')
-            return self.check_direction(count + 1, x, y, direction)
-        else:
-            logging.info('  No match')
-            return count
+        logging.info('------')
 
-    def did_i_win(self, x, y):
-        for direction in config.DIRECTIONS:
-            logging.info(direction.name)
+        consecutive_chips = 0
+        previous_chip = None
 
-            count = self.check_direction(0, x, y, direction)
+        # Check each rows
+        for y in range(0, config.ROWS):
+            for x in range(0, config.COLS):
+                cell = self.board[x][y]
 
-            logging.info('  {}'.format(count))
+                if cell == self.current_player.name and consecutive_chips == 0:
+                    consecutive_chips = 1
+                elif cell == self.current_player.name and cell == previous_chip:
+                    consecutive_chips += 1
+                else:
+                    consecutive_chips = 0
 
-            if count == 3: # There's three same chips in this direction (in addition to the one were we started)
-                return True
+                if consecutive_chips == 4:
+                    logging.info('Found 4 consecutive chips in row {}'.format(y + 1))
+                    return True
+
+                previous_chip = cell
+
+            logging.info('Row {}: {}'.format(y + 1, consecutive_chips))
+
+        logging.info('------')
 
         return False
 
     def draw_board(self):
+        """Draw the board itself (the game support)."""
         for x in range(0, config.COLS):
             for y in range(0, config.ROWS):
                 self.window.blit(self.board_cell_image, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE + config.BOARD_MARGIN_TOP))
 
     def get_free_row(self, column):
+        """Given a column, get the latest row number which is free."""
         for y, cell in self.board[column].items():
             # If there's nothing in the current cell
             if not cell:
                 # If we're in the latest cell or if the next cell isn't empty
                 if (y == config.ROWS - 1) or (not y + 1 > config.ROWS - 1 and self.board[column][y + 1]):
                     return y
+
+        return False
 
     def play(self):
         if not self.current_player_chip:
@@ -145,12 +164,12 @@ class Game:
                     chip_row_stop = self.get_free_row(self.current_player_chip_column)
 
                     # Actually move the chip in the current column and reset the current one (to create a new one later)
-                    if chip_row_stop:
+                    if chip_row_stop is not False:
                         self.placed_sound.play()
                         self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
-                        self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * chip_row_stop + 1
+                        self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
-                        if self.did_i_win(self.current_player_chip_column, chip_row_stop):
+                        if self.did_i_win():
                             pygame.mixer.music.pause()
                             self.win_sound.play()
                             pygame.mixer.music.play(-1)
