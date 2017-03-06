@@ -67,11 +67,12 @@ class Game:
 
     def did_i_win(self):
         """Check if the current player won the game."""
-        consecutive_chips = 0
-        previous_chip = None
 
         # Check each columns
         for x in range(0, config.COLS):
+            consecutive_chips = 0
+            previous_chip = None
+
             for y in range(0, config.ROWS):
                 cell = self.board[x][y]
 
@@ -79,8 +80,6 @@ class Game:
                     consecutive_chips = 1
                 elif cell == self.current_player.name and cell == previous_chip:
                     consecutive_chips += 1
-                else:
-                    consecutive_chips = 0
 
                 if consecutive_chips == 4:
                     logging.info('Found 4 consecutive chips in column {}'.format(x + 1))
@@ -90,13 +89,13 @@ class Game:
 
             logging.info('Column {}: {}'.format(x + 1, consecutive_chips))
 
-        logging.info('------')
-
-        consecutive_chips = 0
-        previous_chip = None
+        logging.info('----------')
 
         # Check each rows
         for y in range(0, config.ROWS):
+            consecutive_chips = 0
+            previous_chip = None
+
             for x in range(0, config.COLS):
                 cell = self.board[x][y]
 
@@ -104,8 +103,6 @@ class Game:
                     consecutive_chips = 1
                 elif cell == self.current_player.name and cell == previous_chip:
                     consecutive_chips += 1
-                else:
-                    consecutive_chips = 0
 
                 if consecutive_chips == 4:
                     logging.info('Found 4 consecutive chips in row {}'.format(y + 1))
@@ -115,7 +112,7 @@ class Game:
 
             logging.info('Row {}: {}'.format(y + 1, consecutive_chips))
 
-        logging.info('------')
+        logging.info('--------------------')
 
         return False
 
