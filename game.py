@@ -165,7 +165,7 @@ class Game:
         # Check each "\" diagonal starting at the bottom left corner
         x = 0
 
-        for y in range(config.ROWS, 0, -1):
+        for y in range(config.ROWS, -1, -1):
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
