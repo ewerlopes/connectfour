@@ -23,3 +23,8 @@ class COLORS(Enum):
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
     YELLOW = (255, 174, 0)
+
+
+class GAME_STATES(Enum):
+    PLAYING = 2
+    WON = 4
