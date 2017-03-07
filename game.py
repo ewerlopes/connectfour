@@ -227,18 +227,25 @@ class Game:
                 utils.try_quit(event)
 
                 if event.type == pygame.KEYDOWN:
-                    # Move chip to the left: before, make sure we'll not go beyond the screen limits
-                    if event.key == pygame.K_LEFT and self.current_player_chip.rect.left - config.IMAGES_SIDE_SIZE >= 0:
+                    if event.key == pygame.K_LEFT: # Move chip to the left
                         self.column_change_sound.play()
-                        self.current_player_chip.rect.left -= config.IMAGES_SIDE_SIZE
-                        self.current_player_chip_column -= 1
-                    # Move chip to the right: before, make sure we'll not go beyond the screen limits
-                    elif event.key == pygame.K_RIGHT and self.current_player_chip.rect.right + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0]:
+
+                        if self.current_player_chip.rect.left - config.IMAGES_SIDE_SIZE >= 0: # The chip will not go beyond the screen
+                            self.current_player_chip.rect.left -= config.IMAGES_SIDE_SIZE
+                            self.current_player_chip_column -= 1
+                        else: # The chip will go beyond the screen: put it in the far right
+                            self.current_player_chip.rect.right = config.WINDOW_SIZE[0]
+                            self.current_player_chip_column = config.COLS - 1
+                    elif event.key == pygame.K_RIGHT: # Move chip to the right
                         self.column_change_sound.play()
-                        self.current_player_chip.rect.right += config.IMAGES_SIDE_SIZE
-                        self.current_player_chip_column += 1
-                    # Drop the chip in the current column
-                    elif event.key == pygame.K_DOWN:
+
+                        if self.current_player_chip.rect.right + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0]: # The chip will not go beyond the screen
+                            self.current_player_chip.rect.right += config.IMAGES_SIDE_SIZE
+                            self.current_player_chip_column += 1
+                        else: # The chip will go beyond the screen: put it in the far left
+                            self.current_player_chip.rect.left = 0
+                            self.current_player_chip_column = 0
+                    elif event.key == pygame.K_DOWN: # Drop the chip in the current column
                         # Check all rows in the currently selected column starting from the top
                         chip_row_stop = self.get_free_row(self.current_player_chip_column)
 
