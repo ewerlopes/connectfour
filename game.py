@@ -211,8 +211,15 @@ class Game:
 
         return False
 
+    def draw_background(self):
+        blue_rect = pygame.Rect((0, 0), (config.WINDOW_SIZE[0], config.BOARD_MARGIN_TOP))
+        black_rect = pygame.Rect((0, config.BOARD_MARGIN_TOP), (config.WINDOW_SIZE[0], config.IMAGES_SIDE_SIZE * config.ROWS))
+
+        self.window.fill(config.COLORS.BLUE.value, blue_rect)
+        self.window.fill(config.COLORS.BLACK.value, black_rect)
+
     def play(self):
-        self.window.fill(config.COLORS.BLACK.value)
+        self.draw_background()
         self.draw_game_name()
 
         if self.state == config.GAME_STATES.PLAYING:

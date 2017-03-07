@@ -21,7 +21,8 @@ class COLORS(Enum):
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
-    YELLOW = (255, 174, 0)
+    YELLOW = (255, 174, 0),
+    BLUE = (0, 42, 224)
 
 
 class GAME_STATES(Enum):
