@@ -2,7 +2,9 @@
 
 The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented in Python.
 
-> TODO: screenshot
+<p align="center">
+  <img src="https://raw.githubusercontent.com/EpocDotFr/connectfour/master/screenshot.png">
+</p>
 
 ## Features
 
@@ -75,6 +77,7 @@ performed by the `build_*` scripts to be ran in the corresponding OS.
   - Musics by [SoundImage.org](http://soundimage.org/dance-techno/) (Royalty-Free)
   - Font by [Tobias Benjamin Köhler](http://www.dafont.com/monofur.font) (freeware)
   - Connect Four™ is a trademark of Milton Bradley / Hasbro
+  - Thanks to the [Swervin Mervin](https://github.com/buntine/SwervinMervin) game's source code who helped me a lot to properly design the architecture of my game and understand the PyGame mechanics
 
 ## Gotcha
 
