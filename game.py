@@ -60,7 +60,7 @@ class Game:
     def draw_game_name(self):
         text = self.normal_font.render('Connect Four ' + config.VERSION, True, config.COLORS.WHITE.value)
         text_rect = text.get_rect()
-        text_rect.y = 10
+        text_rect.centery = 25
         text_rect.right = self.window.get_rect().width - 10
 
         self.window.blit(text, text_rect)
@@ -69,7 +69,7 @@ class Game:
         text = self.title_font.render(title, True, color)
         text_rect = text.get_rect()
         text_rect.x = 10
-        text_rect.y = 10
+        text_rect.centery = 25
 
         self.window.blit(text, text_rect)
 
@@ -212,11 +212,13 @@ class Game:
         return False
 
     def draw_background(self):
-        blue_rect = pygame.Rect((0, 0), (config.WINDOW_SIZE[0], config.BOARD_MARGIN_TOP))
-        black_rect = pygame.Rect((0, config.BOARD_MARGIN_TOP), (config.WINDOW_SIZE[0], config.IMAGES_SIDE_SIZE * config.ROWS))
+        self.window.fill(config.COLORS.BLACK.value)
 
-        self.window.fill(config.COLORS.BLUE.value, blue_rect)
-        self.window.fill(config.COLORS.BLACK.value, black_rect)
+        blue_rect_1 = pygame.Rect((0, 0), (config.WINDOW_SIZE[0], config.COLUMN_CHOOSING_MARGIN_TOP - 1))
+        blue_rect_2 = pygame.Rect((0, config.COLUMN_CHOOSING_MARGIN_TOP), (config.WINDOW_SIZE[0], config.IMAGES_SIDE_SIZE))
+
+        self.window.fill(config.COLORS.BLUE.value, blue_rect_1)
+        self.window.fill(config.COLORS.BLUE.value, blue_rect_2)
 
     def play(self):
         self.draw_background()
