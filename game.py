@@ -17,6 +17,7 @@ class Game:
         logging.info('Loading images')
 
         self.board_cell_image = utils.load_image('board_cell.png')
+        self.board_cell_highlighted_image = utils.load_image('board_cell_highlighted.png')
 
         logging.info('Loading sounds')
 
@@ -46,12 +47,15 @@ class Game:
         self.current_player_chip_column = 0
 
         self.board = {}
+        self.highlighted_chips = {}
 
         for x in range(0, config.COLS):
             self.board[x] = {}
+            self.highlighted_chips[x] = {}
 
             for y in range(0, config.ROWS):
                 self.board[x][y] = None
+                self.highlighted_chips[x][y] = None
 
         logging.info('Loading random music')
 
@@ -198,7 +202,12 @@ class Game:
         """Draw the board itself (the game support)."""
         for x in range(0, config.COLS):
             for y in range(0, config.ROWS):
-                self.window.blit(self.board_cell_image, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE + config.BOARD_MARGIN_TOP))
+                if self.highlighted_chips[x][y] is True:
+                    image = self.board_cell_highlighted_image
+                else:
+                    image = self.board_cell_image
+
+                self.window.blit(image, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE + config.BOARD_MARGIN_TOP))
 
     def get_free_row(self, column):
         """Given a column, get the latest row number which is free."""
@@ -268,6 +277,10 @@ class Game:
                                 self.win_sound.play()
                                 self.applause_sound.play()
                                 self.state = config.GAME_STATES.WON
+                                self.highlighted_chips[0][0] = True # TODO
+                                self.highlighted_chips[1][1] = True # TODO
+                                self.highlighted_chips[2][2] = True # TODO
+                                pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 1000)
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
@@ -287,6 +300,13 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
+                elif event.type == config.EVENTS.WINNER_CHIPS_EVEN.value:
+                    for x in range(0, config.COLS):
+                        for y in range(0, config.ROWS):
+                            if isinstance(self.highlighted_chips[x][y], bool):
+                                self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
+
+                    pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 1000)
 
             self.draw_title(self.current_player.name + ' player win! Press any key to start a new game', config.COLORS.WHITE.value)
         elif self.state == config.GAME_STATES.NO_ONE_WIN:

@@ -1,4 +1,5 @@
 from enum import Enum
+import pygame
 import sys
 import os
 
@@ -29,3 +30,7 @@ class GAME_STATES(Enum):
     PLAYING = 2
     WON = 4
     NO_ONE_WIN = 5
+
+
+class EVENTS(Enum):
+    WINNER_CHIPS_EVEN = pygame.USEREVENT + 2

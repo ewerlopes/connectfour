@@ -27,7 +27,7 @@ logging.info('Initializing main window')
 
 pygame.display.set_caption('Connect Four ' + config.VERSION)
 
-clock = pygame.time.Clock() # Used to limit the FPS
+clock = pygame.time.Clock()
 window = pygame.display.set_mode(config.WINDOW_SIZE, pygame.DOUBLEBUF)
 
 pygame.display.set_icon(utils.load_image('icon.png'))
