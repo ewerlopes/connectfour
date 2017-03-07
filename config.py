@@ -2,8 +2,7 @@ from enum import Enum
 import sys
 import os
 
-__version__ = '0.1'
-
+VERSION = '0.1'
 FPS = 60
 IMAGES_SIDE_SIZE = 112
 COLS = 7
@@ -28,3 +27,4 @@ class COLORS(Enum):
 class GAME_STATES(Enum):
     PLAYING = 2
     WON = 4
+    NO_ONE_WIN = 5

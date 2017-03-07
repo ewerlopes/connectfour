@@ -25,6 +25,7 @@ class Game:
         self.column_full_sound = utils.load_sound('column_full.wav')
         self.win_sound = utils.load_sound('win.wav')
         self.applause_sound = utils.load_sound('applause.wav')
+        self.boo_sound = utils.load_sound('boo.wav')
 
         logging.info('Loading fonts')
 
@@ -57,7 +58,7 @@ class Game:
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'])
 
     def draw_game_name(self):
-        text = self.normal_font.render('Connect Four ' + config.__version__, True, config.COLORS.WHITE.value)
+        text = self.normal_font.render('Connect Four ' + config.VERSION, True, config.COLORS.WHITE.value)
         text_rect = text.get_rect()
         text_rect.y = 10
         text_rect.right = self.window.get_rect().width - 10
@@ -182,6 +183,17 @@ class Game:
 
         return False
 
+    def did_no_one_win(self):
+        """Check if no one win the game.
+
+        This method checks every single cell. If all are filled, no one win."""
+        for x in range(0, config.COLS):
+            for y in range(0, config.ROWS):
+                if not self.board[x][y]: # The cell is empty: players still can play
+                    return False
+
+        return True
+
     def draw_board(self):
         """Draw the board itself (the game support)."""
         for x in range(0, config.COLS):
@@ -240,6 +252,10 @@ class Game:
                                 self.win_sound.play()
                                 self.applause_sound.play()
                                 self.state = config.GAME_STATES.WON
+                            elif self.did_no_one_win():
+                                pygame.mixer.music.stop()
+                                self.boo_sound.play()
+                                self.state = config.GAME_STATES.NO_ONE_WIN
                             else: # It's the other player's turn if the current player didn't win
                                 self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
 
@@ -257,6 +273,14 @@ class Game:
                     self.init_new_game()
 
             self.draw_title(self.current_player.name + ' player win! Press any key to start a new game', config.COLORS.WHITE.value)
+        elif self.state == config.GAME_STATES.NO_ONE_WIN:
+            for event in pygame.event.get():
+                utils.try_quit(event)
+
+                if event.type == pygame.KEYDOWN:
+                    self.init_new_game()
+
+            self.draw_title('Shame, no one win. Press any key to start a new game', config.COLORS.WHITE.value)
 
         self.chips.draw(self.window)
         self.draw_board()
