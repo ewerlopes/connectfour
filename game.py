@@ -4,6 +4,7 @@ import pygame
 import config
 import utils
 import logging
+import sys
 
 
 class Game:
@@ -36,6 +37,15 @@ class Game:
         self.normal_font = utils.load_font('monofur.ttf', 16)
 
         self.init_new_game()
+
+    def handle_global_events(event):
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
+            pass
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F2:
+            pass
 
     def init_new_game(self):
         logging.info('Starting new game')
@@ -273,7 +283,7 @@ class Game:
                 self.current_player_chip.rect.top = config.COLUMN_CHOOSING_MARGIN_TOP
 
             for event in pygame.event.get():
-                utils.try_quit(event)
+                self.handle_global_events(event)
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT: # Move chip to the left
@@ -308,7 +318,7 @@ class Game:
                                 self.win_sound.play()
                                 self.applause_sound.play()
                                 self.state = config.GAME_STATES.WON
-                                pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 600)
+                                pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVENT.value, 600)
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
@@ -324,22 +334,22 @@ class Game:
             self.draw_title(self.current_player.name + ' player turn', self.current_player.color)
         elif self.state == config.GAME_STATES.WON:
             for event in pygame.event.get():
-                utils.try_quit(event)
+                self.handle_global_events(event)
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
-                elif event.type == config.EVENTS.WINNER_CHIPS_EVEN.value:
+                elif event.type == config.EVENTS.WINNER_CHIPS_EVENT.value:
                     for x in range(0, config.COLS):
                         for y in range(0, config.ROWS):
                             if isinstance(self.highlighted_chips[x][y], bool):
                                 self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
 
-                    pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 600)
+                    pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
             self.draw_title(self.current_player.name + ' player win! Press any key to start a new game.', config.COLORS.WHITE.value)
         elif self.state == config.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
-                utils.try_quit(event)
+                self.handle_global_events(event)
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()

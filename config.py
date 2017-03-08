@@ -29,8 +29,16 @@ class COLORS(Enum):
 class GAME_STATES(Enum):
     PLAYING = 2
     WON = 4
-    NO_ONE_WIN = 5
+    NO_ONE_WIN = 6
 
 
 class EVENTS(Enum):
-    WINNER_CHIPS_EVEN = pygame.USEREVENT + 2
+    WINNER_CHIPS_EVENT = pygame.USEREVENT + 2
+
+
+class NETWORK_STATUSES(Enum):
+    LOCAL = 2
+    SERVER_WAITING = 4
+    CLIENT_WAITING = 6
+    SERVER_PLAYING = 8
+    CLIENT_PLAYING = 10

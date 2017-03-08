@@ -1,14 +1,7 @@
 from random import choice
 import pygame
-import sys
 import os
 import config
-
-
-def try_quit(event):
-    if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-        pygame.quit()
-        sys.exit()
 
 
 def _get_resource_path(res_type, filename):
