@@ -3,7 +3,7 @@ import pygame
 import sys
 import os
 
-VERSION = '0.1'
+VERSION = '1.0'
 FPS = 60
 IMAGES_SIDE_SIZE = 112
 COLS = 7
