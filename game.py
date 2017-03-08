@@ -1,3 +1,4 @@
+from collections import deque
 import objects
 import pygame
 import config
@@ -11,6 +12,7 @@ class Game:
         self.clock = clock
 
         self.chips = pygame.sprite.Group()
+        self.current_consecutive_chips = deque(maxlen=4)
         self.red_player = objects.RedPlayer()
         self.yellow_player = objects.YellowPlayer()
 
@@ -41,6 +43,7 @@ class Game:
         self.state = config.GAME_STATES.PLAYING
 
         self.chips.empty()
+        self.current_consecutive_chips.clear()
 
         self.current_player = self.red_player # The starting player is always the red one
         self.current_player_chip = None
@@ -96,8 +99,10 @@ class Game:
         cell = self.board[x][y]
 
         if cell == self.current_player.name and consecutive_chips == 0:
+            self.current_consecutive_chips.append((x, y))
             consecutive_chips = 1
         elif cell == self.current_player.name and cell == previous_chip:
+            self.current_consecutive_chips.append((x, y))
             consecutive_chips += 1
 
         x, y = self.compute_direction_pos(x, y, direction)
@@ -105,6 +110,10 @@ class Game:
         previous_chip = cell
 
         return self.count_consecutive_diagonal_chips(consecutive_chips, previous_chip, x, y, direction)
+
+    def set_highlighted_chips(self):
+        for chips_position in list(self.current_consecutive_chips):
+            self.highlighted_chips[chips_position[0]][chips_position[1]] = True
 
     def did_i_win(self):
         """Check if the current player win the game.
@@ -122,14 +131,19 @@ class Game:
                 cell = self.board[x][y]
 
                 if cell == self.current_player.name and consecutive_chips == 0:
+                    self.current_consecutive_chips.append((x, y))
                     consecutive_chips = 1
                 elif cell == self.current_player.name and cell == previous_chip:
+                    self.current_consecutive_chips.append((x, y))
                     consecutive_chips += 1
 
                 if consecutive_chips == 4:
+                    self.set_highlighted_chips()
                     return True
 
                 previous_chip = cell
+
+        self.current_consecutive_chips.clear()
 
         # Check each rows from top to bottom
         for y in range(0, config.ROWS):
@@ -140,14 +154,19 @@ class Game:
                 cell = self.board[x][y]
 
                 if cell == self.current_player.name and consecutive_chips == 0:
+                    self.current_consecutive_chips.append((x, y))
                     consecutive_chips = 1
                 elif cell == self.current_player.name and cell == previous_chip:
+                    self.current_consecutive_chips.append((x, y))
                     consecutive_chips += 1
 
                 if consecutive_chips == 4:
+                    self.set_highlighted_chips()
                     return True
 
                 previous_chip = cell
+
+        self.current_consecutive_chips.clear()
 
         # Check each "/" diagonal starting at the top left corner
         x = 0
@@ -156,7 +175,10 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
 
             if consecutive_chips == 4:
+                self.set_highlighted_chips()
                 return True
+
+        self.current_consecutive_chips.clear()
 
         # Check each "/" diagonal starting at the bottom left + 1 corner
         y = config.ROWS - 1
@@ -165,7 +187,10 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
 
             if consecutive_chips == 4:
+                self.set_highlighted_chips()
                 return True
+
+        self.current_consecutive_chips.clear()
 
         # Check each "\" diagonal starting at the bottom left corner
         x = 0
@@ -174,7 +199,10 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
+                self.set_highlighted_chips()
                 return True
+
+        self.current_consecutive_chips.clear()
 
         # Check each "\" diagonal starting at the top left + 1 corner
         y = 0
@@ -183,7 +211,10 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
+                self.set_highlighted_chips()
                 return True
+
+        self.current_consecutive_chips.clear()
 
         return False
 
@@ -277,10 +308,7 @@ class Game:
                                 self.win_sound.play()
                                 self.applause_sound.play()
                                 self.state = config.GAME_STATES.WON
-                                self.highlighted_chips[0][0] = True # TODO
-                                self.highlighted_chips[1][1] = True # TODO
-                                self.highlighted_chips[2][2] = True # TODO
-                                pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 1000)
+                                pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 600)
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
@@ -306,9 +334,9 @@ class Game:
                             if isinstance(self.highlighted_chips[x][y], bool):
                                 self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
 
-                    pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 1000)
+                    pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVEN.value, 600)
 
-            self.draw_title(self.current_player.name + ' player win! Press any key to start a new game', config.COLORS.WHITE.value)
+            self.draw_title(self.current_player.name + ' player win! Press any key to start a new game.', config.COLORS.WHITE.value)
         elif self.state == config.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
                 utils.try_quit(event)
@@ -316,7 +344,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
 
-            self.draw_title('Shame, no one win. Press any key to start a new game', config.COLORS.WHITE.value)
+            self.draw_title('Shame, no one win. Press any key to start a new game.', config.COLORS.WHITE.value)
 
         self.chips.draw(self.window)
         self.draw_board()

@@ -11,6 +11,7 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
   - All the Connect Four rules
   - State of the art graphics
   - Two players (of course) on the same computer
+  - Chips that made the player win are highlighted
   - Sound effects!
   - Musics!
 
