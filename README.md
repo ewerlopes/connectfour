@@ -14,7 +14,7 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
   - Chips that made the player win are highlighted
   - Sound effects!
   - Musics!
-  - (WIP) Play with your (not so) far friends through the LAN or internet!
+  - (WIP) Play with your (not so) far friends through the LAN or internet (featuring a server browser)
 
 ## Executables download
 
@@ -73,6 +73,10 @@ works here, so you'll have to jump yourself in the source code. Start with the e
 Beside the game itself, I use [PyInstaller](http://www.pyinstaller.org/) to generate the executables. It packs up all the
 game and its assets in a single executable file so players just have to run it with nothing to install. This task is
 performed by the `build_*` scripts to be ran in the corresponding OS.
+
+Network gaming is done by [WebSockets](https://en.wikipedia.org/wiki/WebSocket) using [Autobahn](http://autobahn.ws/python/).
+A [master server](https://github.com/EpocDotFr/connectfour-master-server) (with the help of a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)
+API) is used to centralize all Connect Four games.
 
 ## Credits
 

@@ -4,7 +4,7 @@ import sys
 import os
 
 VERSION = '1.0'
-FPS = 60
+FPS = 30
 IMAGES_SIDE_SIZE = 112
 COLS = 7
 ROWS = 6
