@@ -38,7 +38,7 @@ class Game:
 
         self.init_new_game()
 
-    def handle_global_events(event):
+    def handle_global_events(self, event):
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             pygame.quit()
             sys.exit()
