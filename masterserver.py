@@ -8,11 +8,6 @@ class GameStatus(Enum):
     FINISHED = 'FINISHED'
 
 
-class GameWinner(Enum):
-    RED = 'RED'
-    YELLOW = 'YELLOW'
-
-
 class MasterServer:
     endpoint = 'http://localhost:8080/'
 
@@ -32,9 +27,6 @@ class MasterServer:
 
         return self._call('GET', 'games', params=params)
 
-    def get_game(self, id):
-        return self._call('GET', 'games/{}'.format(id))
-
     def create_game(self, name, version):
         json = {
             'name': name,
@@ -42,6 +34,9 @@ class MasterServer:
         }
 
         return self._call('POST', 'games', json=json)
+
+    def get_game(self, id):
+        return self._call('GET', 'games/{}'.format(id))
 
     def update_game(self, id, status, name=None, version=None, winner=None):
         json = {

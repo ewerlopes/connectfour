@@ -24,6 +24,7 @@ class RedPlayer:
         self.chip = RedChip
         self.color = config.COLORS.RED.value
         self.name = 'Red'
+        self.id = 'RED'
 
 
 class YellowPlayer:
@@ -31,3 +32,4 @@ class YellowPlayer:
         self.chip = YellowChip
         self.color = config.COLORS.YELLOW.value
         self.name = 'Yellow'
+        self.id = 'YELLOW'
