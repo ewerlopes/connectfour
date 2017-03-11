@@ -20,14 +20,14 @@ class Game:
 
         self.config = ConfigParser(defaults=constants.DEFAULT_CONFIG)
 
-        if os.path.isfile('connectfour.cfg'):
+        if os.path.isfile(constants.CONFIG_FILE):
             logging.info('Configuration file exist')
 
-            self.config.read('connectfour.cfg')
+            self.config.read(constants.CONFIG_FILE)
         else:
             logging.info('Configuration file does not exist')
 
-            with open('connectfour.cfg', 'w') as configfile:
+            with open(constants.CONFIG_FILE, 'w') as configfile:
                 self.config.write(configfile)
 
         self.masterserver = MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
