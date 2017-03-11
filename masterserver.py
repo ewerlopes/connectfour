@@ -9,7 +9,8 @@ class GameStatus(Enum):
 
 
 class MasterServer:
-    endpoint = 'http://localhost:8080/'
+    def __init__(self, endpoint):
+        self.endpoint = endpoint
 
     def _call(self, method, resource, params=None, json=None):
         url = self.endpoint + resource

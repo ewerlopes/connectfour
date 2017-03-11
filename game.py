@@ -1,10 +1,14 @@
 from collections import deque
+from configparser import ConfigParser
+from masterserver import MasterServer
 import objects
 import pygame
-import config
+import constants
 import utils
 import logging
 import sys
+import os
+import platform
 
 
 class Game:
@@ -12,6 +16,21 @@ class Game:
         self.window = window
         self.clock = clock
 
+        logging.info('Loading configuration')
+
+        self.config = ConfigParser(defaults=constants.DEFAULT_CONFIG)
+
+        if os.path.isfile('connectfour.cfg'):
+            logging.info('Configuration file exist')
+
+            self.config.read('connectfour.cfg')
+        else:
+            logging.info('Configuration file does not exist')
+
+            with open('connectfour.cfg', 'w') as configfile:
+                self.config.write(configfile)
+
+        self.masterserver = MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
         self.red_player = objects.RedPlayer()
@@ -42,15 +61,16 @@ class Game:
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
-            pass
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_F2:
-            pass
+        elif event.type == pygame.KEYDOWN and (event.key == pygame.K_F1 or event.key == pygame.K_F2):
+            if event.key == pygame.K_F1:
+                self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
+            elif event.key == pygame.K_F2:
+                pass
 
     def init_new_game(self):
         logging.info('Starting new game')
 
-        self.state = config.GAME_STATES.PLAYING
+        self.state = constants.GAME_STATES.PLAYING
 
         self.chips.empty()
         self.current_consecutive_chips.clear()
@@ -62,11 +82,11 @@ class Game:
         self.board = {}
         self.highlighted_chips = {}
 
-        for x in range(0, config.COLS):
+        for x in range(0, constants.COLS):
             self.board[x] = {}
             self.highlighted_chips[x] = {}
 
-            for y in range(0, config.ROWS):
+            for y in range(0, constants.ROWS):
                 self.board[x][y] = None
                 self.highlighted_chips[x][y] = None
 
@@ -75,7 +95,7 @@ class Game:
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'])
 
     def draw_game_name(self):
-        text = self.normal_font.render('Connect Four ' + config.VERSION, True, config.COLORS.WHITE.value)
+        text = self.normal_font.render('Connect Four ' + constants.VERSION, True, constants.COLORS.WHITE.value)
         text_rect = text.get_rect()
         text_rect.centery = 25
         text_rect.right = self.window.get_rect().width - 10
@@ -91,7 +111,7 @@ class Game:
         self.window.blit(text, text_rect)
 
     def is_valid_position(self, x, y):
-        if x < 0 or x > config.COLS - 1 or y < 0 or y > config.ROWS - 1:
+        if x < 0 or x > constants.COLS - 1 or y < 0 or y > constants.ROWS - 1:
             return False
 
         return True
@@ -133,11 +153,11 @@ class Game:
         """
 
         # Check each columns from left to right
-        for x in range(0, config.COLS):
+        for x in range(0, constants.COLS):
             consecutive_chips = 0
             previous_chip = None
 
-            for y in range(0, config.ROWS):
+            for y in range(0, constants.ROWS):
                 cell = self.board[x][y]
 
                 if cell == self.current_player.name and consecutive_chips == 0:
@@ -156,11 +176,11 @@ class Game:
         self.current_consecutive_chips.clear()
 
         # Check each rows from top to bottom
-        for y in range(0, config.ROWS):
+        for y in range(0, constants.ROWS):
             consecutive_chips = 0
             previous_chip = None
 
-            for x in range(0, config.COLS):
+            for x in range(0, constants.COLS):
                 cell = self.board[x][y]
 
                 if cell == self.current_player.name and consecutive_chips == 0:
@@ -181,7 +201,7 @@ class Game:
         # Check each "/" diagonal starting at the top left corner
         x = 0
 
-        for y in range(0, config.ROWS):
+        for y in range(0, constants.ROWS):
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
 
             if consecutive_chips == 4:
@@ -191,9 +211,9 @@ class Game:
         self.current_consecutive_chips.clear()
 
         # Check each "/" diagonal starting at the bottom left + 1 corner
-        y = config.ROWS - 1
+        y = constants.ROWS - 1
 
-        for x in range(1, config.COLS):
+        for x in range(1, constants.COLS):
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
 
             if consecutive_chips == 4:
@@ -205,7 +225,7 @@ class Game:
         # Check each "\" diagonal starting at the bottom left corner
         x = 0
 
-        for y in range(config.ROWS, -1, -1):
+        for y in range(constants.ROWS, -1, -1):
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
@@ -217,7 +237,7 @@ class Game:
         # Check each "\" diagonal starting at the top left + 1 corner
         y = 0
 
-        for x in range(1, config.COLS):
+        for x in range(1, constants.COLS):
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
@@ -232,8 +252,8 @@ class Game:
         """Check if no one win the game.
 
         This method checks every single cell. If all are filled, no one win."""
-        for x in range(0, config.COLS):
-            for y in range(0, config.ROWS):
+        for x in range(0, constants.COLS):
+            for y in range(0, constants.ROWS):
                 if not self.board[x][y]: # The cell is empty: players still can play
                     return False
 
@@ -241,14 +261,14 @@ class Game:
 
     def draw_board(self):
         """Draw the board itself (the game support)."""
-        for x in range(0, config.COLS):
-            for y in range(0, config.ROWS):
+        for x in range(0, constants.COLS):
+            for y in range(0, constants.ROWS):
                 if self.highlighted_chips[x][y] is True:
                     image = self.board_cell_highlighted_image
                 else:
                     image = self.board_cell_image
 
-                self.window.blit(image, (x * config.IMAGES_SIDE_SIZE, y * config.IMAGES_SIDE_SIZE + config.BOARD_MARGIN_TOP))
+                self.window.blit(image, (x * constants.IMAGES_SIDE_SIZE, y * constants.IMAGES_SIDE_SIZE + constants.BOARD_MARGIN_TOP))
 
     def get_free_row(self, column):
         """Given a column, get the latest row number which is free."""
@@ -256,31 +276,31 @@ class Game:
             # If there's nothing in the current cell
             if not cell:
                 # If we're in the latest cell or if the next cell isn't empty
-                if (y == config.ROWS - 1) or (not y + 1 > config.ROWS - 1 and self.board[column][y + 1]):
+                if (y == constants.ROWS - 1) or (not y + 1 > constants.ROWS - 1 and self.board[column][y + 1]):
                     return y
 
         return False
 
     def draw_background(self):
-        self.window.fill(config.COLORS.BLACK.value)
+        self.window.fill(constants.COLORS.BLACK.value)
 
-        blue_rect_1 = pygame.Rect((0, 0), (config.WINDOW_SIZE[0], config.COLUMN_CHOOSING_MARGIN_TOP - 1))
-        blue_rect_2 = pygame.Rect((0, config.COLUMN_CHOOSING_MARGIN_TOP), (config.WINDOW_SIZE[0], config.IMAGES_SIDE_SIZE))
+        blue_rect_1 = pygame.Rect((0, 0), (constants.WINDOW_SIZE[0], constants.COLUMN_CHOOSING_MARGIN_TOP - 1))
+        blue_rect_2 = pygame.Rect((0, constants.COLUMN_CHOOSING_MARGIN_TOP), (constants.WINDOW_SIZE[0], constants.IMAGES_SIDE_SIZE))
 
-        self.window.fill(config.COLORS.BLUE.value, blue_rect_1)
-        self.window.fill(config.COLORS.BLUE.value, blue_rect_2)
+        self.window.fill(constants.COLORS.BLUE.value, blue_rect_1)
+        self.window.fill(constants.COLORS.BLUE.value, blue_rect_2)
 
     def play(self):
         self.draw_background()
         self.draw_game_name()
 
-        if self.state == config.GAME_STATES.PLAYING:
+        if self.state == constants.GAME_STATES.PLAYING:
             if not self.current_player_chip:
                 self.current_player_chip = self.current_player.chip()
 
                 self.chips.add(self.current_player_chip)
                 self.current_player_chip.rect.left = 0
-                self.current_player_chip.rect.top = config.COLUMN_CHOOSING_MARGIN_TOP
+                self.current_player_chip.rect.top = constants.COLUMN_CHOOSING_MARGIN_TOP
 
             for event in pygame.event.get():
                 self.handle_global_events(event)
@@ -289,17 +309,17 @@ class Game:
                     if event.key == pygame.K_LEFT: # Move chip to the left
                         self.column_change_sound.play()
 
-                        if self.current_player_chip.rect.left - config.IMAGES_SIDE_SIZE >= 0: # The chip will not go beyond the screen
-                            self.current_player_chip.rect.left -= config.IMAGES_SIDE_SIZE
+                        if self.current_player_chip.rect.left - constants.IMAGES_SIDE_SIZE >= 0: # The chip will not go beyond the screen
+                            self.current_player_chip.rect.left -= constants.IMAGES_SIDE_SIZE
                             self.current_player_chip_column -= 1
                         else: # The chip will go beyond the screen: put it in the far right
-                            self.current_player_chip.rect.right = config.WINDOW_SIZE[0]
-                            self.current_player_chip_column = config.COLS - 1
+                            self.current_player_chip.rect.right = constants.WINDOW_SIZE[0]
+                            self.current_player_chip_column = constants.COLS - 1
                     elif event.key == pygame.K_RIGHT: # Move chip to the right
                         self.column_change_sound.play()
 
-                        if self.current_player_chip.rect.right + config.IMAGES_SIDE_SIZE <= config.WINDOW_SIZE[0]: # The chip will not go beyond the screen
-                            self.current_player_chip.rect.right += config.IMAGES_SIDE_SIZE
+                        if self.current_player_chip.rect.right + constants.IMAGES_SIDE_SIZE <= constants.WINDOW_SIZE[0]: # The chip will not go beyond the screen
+                            self.current_player_chip.rect.right += constants.IMAGES_SIDE_SIZE
                             self.current_player_chip_column += 1
                         else: # The chip will go beyond the screen: put it in the far left
                             self.current_player_chip.rect.left = 0
@@ -311,18 +331,18 @@ class Game:
                         if chip_row_stop is not False: # Actually move the chip in the current column and reset the current one (to create a new one later)
                             self.placed_sound.play()
                             self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
-                            self.current_player_chip.rect.top += config.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
+                            self.current_player_chip.rect.top += constants.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
                             if self.did_i_win():
                                 pygame.mixer.music.stop()
                                 self.win_sound.play()
                                 self.applause_sound.play()
-                                self.state = config.GAME_STATES.WON
-                                pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVENT.value, 600)
+                                self.state = constants.GAME_STATES.WON
+                                pygame.time.set_timer(constants.EVENTS.WINNER_CHIPS_EVENT.value, 600)
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
-                                self.state = config.GAME_STATES.NO_ONE_WIN
+                                self.state = constants.GAME_STATES.NO_ONE_WIN
                             else: # It's the other player's turn if the current player didn't win
                                 self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
 
@@ -332,33 +352,33 @@ class Game:
                             self.column_full_sound.play()
 
             self.draw_title(self.current_player.name + ' player turn', self.current_player.color)
-        elif self.state == config.GAME_STATES.WON:
+        elif self.state == constants.GAME_STATES.WON:
             for event in pygame.event.get():
                 self.handle_global_events(event)
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
-                elif event.type == config.EVENTS.WINNER_CHIPS_EVENT.value:
-                    for x in range(0, config.COLS):
-                        for y in range(0, config.ROWS):
+                elif event.type == constants.EVENTS.WINNER_CHIPS_EVENT.value:
+                    for x in range(0, constants.COLS):
+                        for y in range(0, constants.ROWS):
                             if isinstance(self.highlighted_chips[x][y], bool):
                                 self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
 
-                    pygame.time.set_timer(config.EVENTS.WINNER_CHIPS_EVENT.value, 600)
+                    pygame.time.set_timer(constants.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
-            self.draw_title(self.current_player.name + ' player win! Press any key to start a new game.', config.COLORS.WHITE.value)
-        elif self.state == config.GAME_STATES.NO_ONE_WIN:
+            self.draw_title(self.current_player.name + ' player win! Press any key to start a new game.', constants.COLORS.WHITE.value)
+        elif self.state == constants.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
                 self.handle_global_events(event)
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
 
-            self.draw_title('Shame, no one win. Press any key to start a new game.', config.COLORS.WHITE.value)
+            self.draw_title('Shame, no one win. Press any key to start a new game.', constants.COLORS.WHITE.value)
 
         self.chips.draw(self.window)
         self.draw_board()
 
         pygame.display.update()
 
-        self.clock.tick(config.FPS)
+        self.clock.tick(constants.FPS)

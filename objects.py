@@ -1,6 +1,6 @@
 import pygame
 import utils
-import config
+import constants
 
 
 class RedChip(pygame.sprite.Sprite):
@@ -22,7 +22,7 @@ class YellowChip(pygame.sprite.Sprite):
 class RedPlayer:
     def __init__(self):
         self.chip = RedChip
-        self.color = config.COLORS.RED.value
+        self.color = constants.COLORS.RED.value
         self.name = 'Red'
         self.id = 'RED'
 
@@ -30,6 +30,6 @@ class RedPlayer:
 class YellowPlayer:
     def __init__(self):
         self.chip = YellowChip
-        self.color = config.COLORS.YELLOW.value
+        self.color = constants.COLORS.YELLOW.value
         self.name = 'Yellow'
         self.id = 'YELLOW'

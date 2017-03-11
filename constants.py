@@ -17,6 +17,12 @@ MUSIC_VOLUME = 0.2
 # When frozen by PyInstaller, the path to the resources is different
 RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
 
+DEFAULT_CONFIG = {
+    'master_server_endpoint': 'https://cfms.epoc.fr/',
+    'columns': 7,
+    'rows': 6
+}
+
 
 class COLORS(Enum):
     BLACK = (0, 0, 0)

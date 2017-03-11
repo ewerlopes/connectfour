@@ -1,5 +1,5 @@
 import pygame
-import config
+import constants
 import game
 import utils
 import logging
@@ -25,10 +25,10 @@ pygame.init()
 
 logging.info('Initializing main window')
 
-pygame.display.set_caption('Connect Four ' + config.VERSION)
+pygame.display.set_caption('Connect Four ' + constants.VERSION)
 
 clock = pygame.time.Clock()
-window = pygame.display.set_mode(config.WINDOW_SIZE, pygame.DOUBLEBUF)
+window = pygame.display.set_mode(constants.WINDOW_SIZE, pygame.DOUBLEBUF)
 
 pygame.display.set_icon(utils.load_image('icon.png'))
 pygame.mouse.set_visible(False)
