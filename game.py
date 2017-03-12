@@ -1,6 +1,6 @@
 from collections import deque
 from configparser import ConfigParser
-from masterserver import MasterServer
+import masterserver
 import objects
 import pygame
 import constants
@@ -30,7 +30,7 @@ class Game:
             with open(constants.CONFIG_FILE, 'w') as configfile:
                 self.config.write(configfile)
 
-        self.masterserver = MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
+        self.masterserver = masterserver.MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
         self.red_player = objects.RedPlayer()
@@ -64,7 +64,9 @@ class Game:
         elif event.type == pygame.KEYDOWN and event.key in [pygame.K_F1, pygame.K_F2]:
             if event.key == pygame.K_F1:
                 try:
-                    self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
+                    response = self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
+
+                    self.current_game_token = response.token
                 except Exception as e:
                     logging.error(e)
             elif event.key == pygame.K_F2:
