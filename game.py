@@ -66,7 +66,7 @@ class Game:
                 try:
                     response = self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
 
-                    self.current_game_token = response.token
+                    self.current_game_token = response['token']
                 except Exception as e:
                     logging.error(e)
             elif event.key == pygame.K_F2:
