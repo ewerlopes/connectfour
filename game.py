@@ -61,9 +61,12 @@ class Game:
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN and (event.key == pygame.K_F1 or event.key == pygame.K_F2):
+        elif event.type == pygame.KEYDOWN and event.key in [pygame.K_F1, pygame.K_F2]:
             if event.key == pygame.K_F1:
-                self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
+                try:
+                    self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
+                except Exception as e:
+                    logging.error(e)
             elif event.key == pygame.K_F2:
                 pass
 
@@ -339,17 +342,21 @@ class Game:
                                 self.applause_sound.play()
                                 self.state = constants.GAME_STATES.WON
                                 pygame.time.set_timer(constants.EVENTS.WINNER_CHIPS_EVENT.value, 600)
+                                logging.info(self.current_player.name + ' win')
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
                                 self.state = constants.GAME_STATES.NO_ONE_WIN
+                                logging.info('No one won')
                             else: # It's the other player's turn if the current player didn't win
                                 self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
+                                logging.info(self.current_player.name + ' player turn')
 
                             self.current_player_chip = None
                             self.current_player_chip_column = 0
                         else: # The column is full
                             self.column_full_sound.play()
+                            logging.info('{} column full'.format(self.current_player_chip_column))
 
             self.draw_title(self.current_player.name + ' player turn', self.current_player.color)
         elif self.state == constants.GAME_STATES.WON:

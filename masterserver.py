@@ -39,10 +39,13 @@ class MasterServer:
     def get_game(self, id):
         return self._call('GET', 'games/{}'.format(id))
 
-    def update_game(self, id, status, name=None, version=None, winner=None):
+    def update_game(self, id, token, status=None, name=None, version=None, winner=None):
         json = {
-            'status': status
+            'token': token
         }
+
+        if status:
+            json['status'] = status
 
         if name:
             json['name'] = name
@@ -55,5 +58,9 @@ class MasterServer:
 
         return self._call('PUT', 'games/{}'.format(id), json=json)
 
-    def delete_game(self, id):
-        return self._call('DELETE', 'games/{}'.format(id))
+    def delete_game(self, id, token):
+        json = {
+            'token': token
+        }
+
+        return self._call('DELETE', 'games/{}'.format(id), json=json)
