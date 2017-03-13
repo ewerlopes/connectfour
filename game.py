@@ -4,7 +4,6 @@ import pygame
 import constants
 import utils
 import logging
-import sys
 import platform
 
 
@@ -41,10 +40,9 @@ class Game:
         self.init_new_game()
 
     def handle_global_events(self, event):
-        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.KEYDOWN and event.key in [pygame.K_F1, pygame.K_F2]:
+        self.app.try_to_quit(event)
+
+        if event.type == pygame.KEYDOWN and event.key in [pygame.K_F1, pygame.K_F2]:
             if event.key == pygame.K_F1:
                 try:
                     response = self.app.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
@@ -291,7 +289,7 @@ class Game:
                 self.current_player_chip.rect.top = constants.COLUMN_CHOOSING_MARGIN_TOP
 
             for event in pygame.event.get():
-                self.handle_global_events(event)
+                self.app.try_to_quit(event)
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT: # Move chip to the left
@@ -346,7 +344,7 @@ class Game:
             self.draw_title(self.current_player.name + ' player turn', self.current_player.color)
         elif self.state == constants.GAME_STATES.WON:
             for event in pygame.event.get():
-                self.handle_global_events(event)
+                self.app.try_to_quit(event)
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
@@ -361,7 +359,7 @@ class Game:
             self.draw_title(self.current_player.name + ' player win! Press any key to start a new game.', constants.COLORS.WHITE.value)
         elif self.state == constants.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
-                self.handle_global_events(event)
+                self.app.try_to_quit(event)
 
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()

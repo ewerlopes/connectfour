@@ -6,6 +6,7 @@ import constants
 import utils
 import logging
 import os
+import sys
 
 
 class App:
@@ -24,6 +25,11 @@ class App:
         self.masterserver = masterserver.MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
 
         self.load_screens()
+
+    def try_to_quit(self, event):
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            pygame.quit()
+            sys.exit()
 
     def load_config(self):
         logging.info('Loading configuration')
