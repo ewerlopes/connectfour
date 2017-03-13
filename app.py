@@ -19,7 +19,6 @@ class App:
 
         pygame.display.set_caption('Connect Four ' + constants.VERSION)
         pygame.display.set_icon(utils.load_image('icon.png'))
-        pygame.mouse.set_visible(False)
 
         self.load_config()
 

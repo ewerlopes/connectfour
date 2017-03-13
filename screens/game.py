@@ -39,20 +39,6 @@ class Game:
 
         self.init_new_game()
 
-    def handle_global_events(self, event):
-        self.app.try_to_quit(event)
-
-        if event.type == pygame.KEYDOWN and event.key in [pygame.K_F1, pygame.K_F2]:
-            if event.key == pygame.K_F1:
-                try:
-                    response = self.app.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
-
-                    self.current_game_token = response['token']
-                except Exception as e:
-                    logging.error(e)
-            elif event.key == pygame.K_F2:
-                pass
-
     def init_new_game(self):
         logging.info('Starting new game')
 

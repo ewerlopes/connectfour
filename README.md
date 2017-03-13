@@ -62,8 +62,6 @@ python run.py
   - <kbd>ESC</kbd> quits the game
   - <kbd>←</kbd> and <kbd>→</kbd> moves the chip respectively to the left and to the right
   - <kbd>↓</kbd> drops the chip in the selected column
-  - (WIP) <kbd>F1</kbd> enables or disables the host mode. When enabled, other player may join you. Hit <kbd>F1</kbd> again to switch back to the local mode (this will disconnect the other player if connected)
-  - (WIP) <kbd>F2</kbd> enables or disables the join mode. When enabled, you'll be able to join a host. Hit <kbd>F2</kbd> again to switch back to the local mode (this will disconnect you from the host if connected)
 
 ## How it works
 

@@ -12,21 +12,23 @@ class Menu:
         self.app = app
         self.gui = pygame.sprite.Group()
 
-        btn = gui.Button(
-            rect=pygame.Rect(200, 200, 200, 50),
-            text='Test',
-            text_color=constants.COLORS.WHITE.value,
-            background_color=constants.COLORS.BLUE.value,
-            border_color=constants.COLORS.RED.value,
-            border_width=2
-        )
-
-        self.gui.add(btn)
-
         logging.info('Loading fonts')
 
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 16)
+
+        logging.info('Loading GUI')
+
+        btn = gui.Button(
+            rect=pygame.Rect(200, 200, 150, 50),
+            font=self.normal_font,
+            text='Test',
+            text_color=constants.COLORS.WHITE.value,
+            background_color=constants.COLORS.BLUE.value,
+            border_color=constants.COLORS.RED.value
+        )
+
+        self.gui.add(btn)
 
     def draw_title(self):
         title = self.title_font.render('Connect Four ', True, constants.COLORS.WHITE.value)
