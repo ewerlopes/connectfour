@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from game import Game
+from screens.game import Game
 import masterserver
 import pygame
 import constants
