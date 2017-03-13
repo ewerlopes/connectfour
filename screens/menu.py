@@ -20,19 +20,47 @@ class Menu:
 
         logging.info('Loading GUI')
 
-        btn_rect = pygame.Rect(0, 200, 150, 50)
-        btn_rect.centerx = self.app.window.get_rect().centerx
+        btn_local_game_rect = pygame.Rect(0, 200, 200, 40)
+        btn_local_game_rect.centerx = self.app.window.get_rect().centerx
 
-        btn = gui.Button(
-            rect=btn_rect,
+        btn_local_game = gui.Button(
+            rect=btn_local_game_rect,
             font=self.normal_font,
-            text='Test',
+            text='Local game',
             text_color=constants.COLORS.WHITE.value,
             background_color=constants.COLORS.BLUE.value,
             border_color=constants.COLORS.RED.value
         )
 
-        self.gui.add(btn)
+        self.gui.add(btn_local_game)
+
+        btn_host_game_rect = pygame.Rect(0, 300, 200, 40)
+        btn_host_game_rect.centerx = self.app.window.get_rect().centerx
+
+        btn_host_game = gui.Button(
+            rect=btn_host_game_rect,
+            font=self.normal_font,
+            text='Host a game',
+            text_color=constants.COLORS.WHITE.value,
+            background_color=constants.COLORS.BLUE.value,
+            border_color=constants.COLORS.RED.value
+        )
+
+        self.gui.add(btn_host_game)
+
+        btn_join_game_rect = pygame.Rect(0, 400, 200, 40)
+        btn_join_game_rect.centerx = self.app.window.get_rect().centerx
+
+        btn_join_game = gui.Button(
+            rect=btn_join_game_rect,
+            font=self.normal_font,
+            text='Join a game',
+            text_color=constants.COLORS.WHITE.value,
+            background_color=constants.COLORS.BLUE.value,
+            border_color=constants.COLORS.RED.value
+        )
+
+        self.gui.add(btn_join_game)
 
     def draw_title(self):
         title = self.title_font.render('Connect Four ', True, constants.COLORS.WHITE.value)
