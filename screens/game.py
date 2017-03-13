@@ -1,10 +1,11 @@
 from collections import deque
+from screens.menu import Menu
 import objects
 import pygame
 import constants
 import utils
 import logging
-import platform
+import sys
 
 
 class Game:
@@ -275,10 +276,14 @@ class Game:
                 self.current_player_chip.rect.top = constants.COLUMN_CHOOSING_MARGIN_TOP
 
             for event in pygame.event.get():
-                self.app.try_to_quit(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT: # Move chip to the left
+                    if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
+                        self.app.set_current_screen(Menu)
+                    elif event.key == pygame.K_LEFT: # Move chip to the left
                         self.column_change_sound.play()
 
                         if self.current_player_chip.rect.left - constants.IMAGES_SIDE_SIZE >= 0: # The chip will not go beyond the screen
@@ -330,10 +335,15 @@ class Game:
             self.draw_status(self.current_player.name + ' player turn', self.current_player.color)
         elif self.state == constants.GAME_STATES.WON:
             for event in pygame.event.get():
-                self.app.try_to_quit(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-                    self.init_new_game()
+                    if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
+                        self.app.set_current_screen(Menu)
+                    else:
+                        self.init_new_game()
                 elif event.type == constants.EVENTS.WINNER_CHIPS_EVENT.value:
                     for x in range(0, constants.COLS):
                         for y in range(0, constants.ROWS):
@@ -345,10 +355,15 @@ class Game:
             self.draw_status(self.current_player.name + ' player win! Press any key to start a new game.', constants.COLORS.WHITE.value)
         elif self.state == constants.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
-                self.app.try_to_quit(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-                    self.init_new_game()
+                    if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
+                        self.app.set_current_screen(Menu)
+                    else:
+                        self.init_new_game()
 
             self.draw_status('Shame, no one win. Press any key to start a new game.', constants.COLORS.WHITE.value)
 

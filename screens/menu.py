@@ -3,6 +3,7 @@ import logging
 import constants
 import gui
 import utils
+import sys
 
 
 class Menu:
@@ -19,8 +20,11 @@ class Menu:
 
         logging.info('Loading GUI')
 
+        btn_rect = pygame.Rect(0, 200, 150, 50)
+        btn_rect.centerx = self.app.window.get_rect().centerx
+
         btn = gui.Button(
-            rect=pygame.Rect(200, 200, 150, 50),
+            rect=btn_rect,
             font=self.normal_font,
             text='Test',
             text_color=constants.COLORS.WHITE.value,
@@ -46,7 +50,13 @@ class Menu:
 
     def update(self):
         for event in pygame.event.get():
-            self.app.try_to_quit(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
         self.app.window.fill(constants.COLORS.BLACK.value)
 

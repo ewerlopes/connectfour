@@ -7,7 +7,6 @@ import constants
 import utils
 import logging
 import os
-import sys
 
 
 class App:
@@ -22,14 +21,10 @@ class App:
 
         self.load_config()
 
-        self.masterserver = masterserver.MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
+        self.masterserver = masterserver.MasterServer(self.get_config('master_server_endpoint'))
 
-        self.load_screens()
-
-    def try_to_quit(self, event):
-        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-            pygame.quit()
-            sys.exit()
+        self.set_current_screen(Game)
+        # self.set_current_screen(Menu)
 
     def load_config(self):
         logging.info('Loading configuration')
@@ -46,13 +41,16 @@ class App:
             with open(constants.CONFIG_FILE, 'w') as configfile:
                 self.config.write(configfile)
 
-    def load_screens(self):
-        logging.info('Loading screens')
+    def get_config(self, key):
+        return self.config.get('connectfour', key)
 
-        self.menu_screen = Menu(self)
-        self.game_screen = Game(self)
+    def set_current_screen(self, Screen):
+        logging.info('Setting current screen to {}'.format(Screen))
 
-        self.current_screen = self.game_screen
+        if hasattr(self, 'current_screen') and self.current_screen:
+            del self.current_screen
+
+        self.current_screen = Screen(self)
 
     def update(self):
         self.current_screen.update()
