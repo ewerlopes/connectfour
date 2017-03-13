@@ -1,36 +1,19 @@
 from collections import deque
-from configparser import ConfigParser
-import masterserver
 import objects
 import pygame
 import constants
 import utils
 import logging
 import sys
-import os
 import platform
 
 
 class Game:
-    def __init__(self, window, clock):
-        self.window = window
-        self.clock = clock
+    def __init__(self, app):
+        logging.info('Initializing game')
 
-        logging.info('Loading configuration')
+        self.app = app
 
-        self.config = ConfigParser(defaults=constants.DEFAULT_CONFIG)
-
-        if os.path.isfile(constants.CONFIG_FILE):
-            logging.info('Configuration file exist')
-
-            self.config.read(constants.CONFIG_FILE)
-        else:
-            logging.info('Configuration file does not exist')
-
-            with open(constants.CONFIG_FILE, 'w') as configfile:
-                self.config.write(configfile)
-
-        self.masterserver = masterserver.MasterServer(self.config.get('connectfour', 'master_server_endpoint'))
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
         self.red_player = objects.RedPlayer()
@@ -64,7 +47,7 @@ class Game:
         elif event.type == pygame.KEYDOWN and event.key in [pygame.K_F1, pygame.K_F2]:
             if event.key == pygame.K_F1:
                 try:
-                    response = self.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
+                    response = self.app.masterserver.create_game(platform.node(), constants.VERSION) # TODO TEMP
 
                     self.current_game_token = response['token']
                 except Exception as e:
@@ -103,9 +86,9 @@ class Game:
         text = self.normal_font.render('Connect Four ' + constants.VERSION, True, constants.COLORS.WHITE.value)
         text_rect = text.get_rect()
         text_rect.centery = 25
-        text_rect.right = self.window.get_rect().width - 10
+        text_rect.right = self.app.window.get_rect().width - 10
 
-        self.window.blit(text, text_rect)
+        self.app.window.blit(text, text_rect)
 
     def draw_title(self, title, color):
         text = self.title_font.render(title, True, color)
@@ -113,7 +96,7 @@ class Game:
         text_rect.x = 10
         text_rect.centery = 25
 
-        self.window.blit(text, text_rect)
+        self.app.window.blit(text, text_rect)
 
     def is_valid_position(self, x, y):
         if x < 0 or x > constants.COLS - 1 or y < 0 or y > constants.ROWS - 1:
@@ -273,7 +256,7 @@ class Game:
                 else:
                     image = self.board_cell_image
 
-                self.window.blit(image, (x * constants.IMAGES_SIDE_SIZE, y * constants.IMAGES_SIDE_SIZE + constants.BOARD_MARGIN_TOP))
+                self.app.window.blit(image, (x * constants.IMAGES_SIDE_SIZE, y * constants.IMAGES_SIDE_SIZE + constants.BOARD_MARGIN_TOP))
 
     def get_free_row(self, column):
         """Given a column, get the latest row number which is free."""
@@ -287,15 +270,15 @@ class Game:
         return False
 
     def draw_background(self):
-        self.window.fill(constants.COLORS.BLACK.value)
+        self.app.window.fill(constants.COLORS.BLACK.value)
 
         blue_rect_1 = pygame.Rect((0, 0), (constants.WINDOW_SIZE[0], constants.COLUMN_CHOOSING_MARGIN_TOP - 1))
         blue_rect_2 = pygame.Rect((0, constants.COLUMN_CHOOSING_MARGIN_TOP), (constants.WINDOW_SIZE[0], constants.IMAGES_SIDE_SIZE))
 
-        self.window.fill(constants.COLORS.BLUE.value, blue_rect_1)
-        self.window.fill(constants.COLORS.BLUE.value, blue_rect_2)
+        self.app.window.fill(constants.COLORS.BLUE.value, blue_rect_1)
+        self.app.window.fill(constants.COLORS.BLUE.value, blue_rect_2)
 
-    def play(self):
+    def update(self):
         self.draw_background()
         self.draw_game_name()
 
@@ -385,9 +368,5 @@ class Game:
 
             self.draw_title('Shame, no one win. Press any key to start a new game.', constants.COLORS.WHITE.value)
 
-        self.chips.draw(self.window)
+        self.chips.draw(self.app.window)
         self.draw_board()
-
-        pygame.display.update()
-
-        self.clock.tick(constants.FPS)

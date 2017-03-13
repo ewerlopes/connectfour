@@ -1,7 +1,5 @@
+from app import App
 import pygame
-import constants
-import game
-import utils
 import logging
 import sys
 import os
@@ -23,19 +21,9 @@ logging.info('Initializing PyGame/{} (with SDL/{})'.format(
 
 pygame.init()
 
-logging.info('Initializing main window')
-
-pygame.display.set_caption('Connect Four ' + constants.VERSION)
-
-clock = pygame.time.Clock()
-window = pygame.display.set_mode(constants.WINDOW_SIZE, pygame.DOUBLEBUF)
-
-pygame.display.set_icon(utils.load_image('icon.png'))
-pygame.mouse.set_visible(False)
-
-game = game.Game(window, clock)
+app = App()
 
 logging.info('Running game')
 
 while True:
-    game.play()
+    app.update()
