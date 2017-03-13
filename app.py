@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from screens.game import Game
+from screens.menu import Menu
 import masterserver
 import pygame
 import constants
@@ -49,6 +50,7 @@ class App:
     def load_screens(self):
         logging.info('Loading screens')
 
+        self.menu_screen = Menu(self)
         self.game_screen = Game(self)
 
         self.current_screen = self.game_screen

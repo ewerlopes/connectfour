@@ -81,15 +81,15 @@ class Game:
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'])
 
     def draw_game_name(self):
-        text = self.normal_font.render('Connect Four ' + constants.VERSION, True, constants.COLORS.WHITE.value)
+        text = self.normal_font.render('Connect Four v' + constants.VERSION, True, constants.COLORS.WHITE.value)
         text_rect = text.get_rect()
         text_rect.centery = 25
         text_rect.right = self.app.window.get_rect().width - 10
 
         self.app.window.blit(text, text_rect)
 
-    def draw_title(self, title, color):
-        text = self.title_font.render(title, True, color)
+    def draw_status(self, text, color):
+        text = self.title_font.render(text, True, color)
         text_rect = text.get_rect()
         text_rect.x = 10
         text_rect.centery = 25
@@ -341,7 +341,7 @@ class Game:
                             self.column_full_sound.play()
                             logging.info('{} column full'.format(self.current_player_chip_column))
 
-            self.draw_title(self.current_player.name + ' player turn', self.current_player.color)
+            self.draw_status(self.current_player.name + ' player turn', self.current_player.color)
         elif self.state == constants.GAME_STATES.WON:
             for event in pygame.event.get():
                 self.app.try_to_quit(event)
@@ -356,7 +356,7 @@ class Game:
 
                     pygame.time.set_timer(constants.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
-            self.draw_title(self.current_player.name + ' player win! Press any key to start a new game.', constants.COLORS.WHITE.value)
+            self.draw_status(self.current_player.name + ' player win! Press any key to start a new game.', constants.COLORS.WHITE.value)
         elif self.state == constants.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
                 self.app.try_to_quit(event)
@@ -364,7 +364,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     self.init_new_game()
 
-            self.draw_title('Shame, no one win. Press any key to start a new game.', constants.COLORS.WHITE.value)
+            self.draw_status('Shame, no one win. Press any key to start a new game.', constants.COLORS.WHITE.value)
 
         self.chips.draw(self.app.window)
         self.draw_board()
