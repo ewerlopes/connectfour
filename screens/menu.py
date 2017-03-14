@@ -16,11 +16,13 @@ class Menu:
         logging.info('Loading fonts')
 
         self.title_font = utils.load_font('monofur.ttf', 62)
-        self.normal_font = utils.load_font('monofur.ttf', 16)
+        self.normal_font = utils.load_font('monofur.ttf', 18)
 
         logging.info('Loading GUI')
 
         self.load_gui()
+
+        utils.load_music('menu.wav')
 
     def create_menu_button(self, y, text, on_click):
         btn_rect = pygame.Rect(0, y, 200, 40)

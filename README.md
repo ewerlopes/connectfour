@@ -80,7 +80,7 @@ API) is used to centralize all Connect Four games.
 
   - Board graphics by [François Haffner](https://commons.wikimedia.org/wiki/File:Puissance4_01.svg) (public domain)
   - Sound effects by [Freesfx.co.uk](http://www.freesfx.co.uk/) (© Freesfx.co.uk)
-  - Musics by [SoundImage.org](http://soundimage.org/dance-techno/) (Royalty-Free)
+  - Musics by [SoundImage.org](http://soundimage.org/) (Royalty-Free)
   - Font by [Tobias Benjamin Köhler](http://www.dafont.com/monofur.font) (freeware)
   - Connect Four™ is a trademark of Milton Bradley / Hasbro
   - Thanks to the [Swervin Mervin](https://github.com/buntine/SwervinMervin) game's source code who helped me a lot to properly design the architecture of my game and understand the PyGame mechanics
