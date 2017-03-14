@@ -20,10 +20,6 @@ class Menu:
 
         utils.load_music('menu.wav')
 
-        self.app.window.fill(constants.COLORS.BLACK.value)
-
-        self.draw_title()
-
         self.load_gui()
 
     def create_menu_button(self, y, text, on_click):
@@ -126,6 +122,10 @@ class Menu:
                 sys.exit()
 
             gui.event_handler(self.menu_gui, event)
+
+        self.app.window.fill(constants.COLORS.BLACK.value)
+
+        self.draw_title()
 
         self.menu_gui.update()
         self.menu_gui.draw(self.app.window)
