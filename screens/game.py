@@ -352,7 +352,7 @@ class Game:
 
                     pygame.time.set_timer(constants.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
-            self.draw_status(self.current_player.name + ' player win! Press any key to start a new game.', constants.COLORS.WHITE.value)
+            self.draw_status(self.current_player.name + ' player win!', constants.COLORS.WHITE.value)
         elif self.state == constants.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -365,7 +365,7 @@ class Game:
                     else:
                         self.init_new_game()
 
-            self.draw_status('Shame, no one win. Press any key to start a new game.', constants.COLORS.WHITE.value)
+            self.draw_status('Shame, no one win.', constants.COLORS.WHITE.value)
 
         self.chips.draw(self.app.window)
         self.draw_board()

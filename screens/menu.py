@@ -61,42 +61,42 @@ class Menu:
 
         # Offline game button
         self.menu_gui.add(self.create_menu_button(
-            y=200,
+            y=120,
             text='Offline game',
             on_click=self.btn_offline_game_click
         ))
 
         # Host an online game button
         self.menu_gui.add(self.create_menu_button(
-            y=300,
+            y=180,
             text='Host an online game',
             on_click=self.btn_host_online_game_click
         ))
 
         # Join an online game button
         self.menu_gui.add(self.create_menu_button(
-            y=350,
+            y=230,
             text='Join an online game',
             on_click=self.btn_join_online_game_click
         ))
 
         # Host a LAN game button
         self.menu_gui.add(self.create_menu_button(
-            y=450,
+            y=290,
             text='Host a LAN game',
             on_click=self.btn_host_lan_game_click
         ))
 
         # Join a LAN game button
         self.menu_gui.add(self.create_menu_button(
-            y=500,
+            y=340,
             text='Join a LAN game',
             on_click=self.btn_join_lan_game_click
         ))
 
         # Quit button
         self.menu_gui.add(self.create_menu_button(
-            y=600,
+            y=400,
             text='Quit',
             on_click=self.btn_quit_click
         ))
