@@ -1,5 +1,5 @@
+from screens import menu
 from collections import deque
-from screens.menu import Menu
 import objects
 import pygame
 import constants
@@ -282,7 +282,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(Menu)
+                        self.app.set_current_screen(menu.Menu)
                     elif event.key == pygame.K_LEFT: # Move chip to the left
                         self.column_change_sound.play()
 
@@ -341,7 +341,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(Menu)
+                        self.app.set_current_screen(menu.Menu)
                     else:
                         self.init_new_game()
                 elif event.type == constants.EVENTS.WINNER_CHIPS_EVENT.value:
@@ -361,7 +361,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(Menu)
+                        self.app.set_current_screen(menu.Menu)
                     else:
                         self.init_new_game()
 

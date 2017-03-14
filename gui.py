@@ -1,9 +1,24 @@
 import pygame
 
 
-class Button(pygame.sprite.Sprite):
-    def __init__(self, rect, font, text, text_color, background_color, border_color):
+def event_handler(gui_group, event):
+    for widget in gui_group:
+        if isinstance(widget, ButtonWidget) and widget.on_click is not None:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if widget.rect.collidepoint(event.pos):
+                    widget.on_click()
+
+
+class Widget(pygame.sprite.Sprite):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+
+
+class ButtonWidget(Widget):
+    on_click = None
+
+    def __init__(self, rect, font, text, text_color, background_color, border_color, on_click=None):
+        Widget.__init__(self)
 
         self.image = pygame.Surface(rect.size)
         self.rect = rect
@@ -18,3 +33,5 @@ class Button(pygame.sprite.Sprite):
         txt_rect.center = self.internal_rect.center
 
         self.image.blit(txt, txt_rect)
+
+        self.on_click = on_click

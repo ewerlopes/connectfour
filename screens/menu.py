@@ -1,3 +1,4 @@
+from screens import game
 import pygame
 import logging
 import constants
@@ -11,7 +12,6 @@ class Menu:
         logging.info('Initializing menu')
 
         self.app = app
-        self.gui = pygame.sprite.Group()
 
         logging.info('Loading fonts')
 
@@ -20,47 +20,85 @@ class Menu:
 
         logging.info('Loading GUI')
 
-        btn_local_game_rect = pygame.Rect(0, 200, 200, 40)
-        btn_local_game_rect.centerx = self.app.window.get_rect().centerx
+        self.load_gui()
 
-        btn_local_game = gui.Button(
-            rect=btn_local_game_rect,
+    def create_menu_button(self, y, text, on_click):
+        btn_rect = pygame.Rect(0, y, 200, 40)
+        btn_rect.centerx = self.app.window.get_rect().centerx
+
+        return gui.ButtonWidget(
+            rect=btn_rect,
             font=self.normal_font,
-            text='Local game',
+            text=text,
             text_color=constants.COLORS.WHITE.value,
             background_color=constants.COLORS.BLUE.value,
-            border_color=constants.COLORS.RED.value
+            border_color=constants.COLORS.RED.value,
+            on_click=on_click
         )
 
-        self.gui.add(btn_local_game)
+    def btn_offline_game_click(self):
+        self.app.set_current_screen(game.Game)
 
-        btn_host_game_rect = pygame.Rect(0, 300, 200, 40)
-        btn_host_game_rect.centerx = self.app.window.get_rect().centerx
+    def btn_host_online_game_click(self):
+        logging.info('Host an online game button clicked')
 
-        btn_host_game = gui.Button(
-            rect=btn_host_game_rect,
-            font=self.normal_font,
-            text='Host a game',
-            text_color=constants.COLORS.WHITE.value,
-            background_color=constants.COLORS.BLUE.value,
-            border_color=constants.COLORS.RED.value
-        )
+    def btn_join_online_game_click(self):
+        logging.info('Join an online game button clicked')
 
-        self.gui.add(btn_host_game)
+    def btn_host_lan_game_click(self):
+        logging.info('Host a LAN game button clicked')
 
-        btn_join_game_rect = pygame.Rect(0, 400, 200, 40)
-        btn_join_game_rect.centerx = self.app.window.get_rect().centerx
+    def btn_join_lan_game_click(self):
+        logging.info('Join a LAN game button clicked')
 
-        btn_join_game = gui.Button(
-            rect=btn_join_game_rect,
-            font=self.normal_font,
-            text='Join a game',
-            text_color=constants.COLORS.WHITE.value,
-            background_color=constants.COLORS.BLUE.value,
-            border_color=constants.COLORS.RED.value
-        )
+    def btn_quit_click(self):
+        pygame.quit()
+        sys.exit()
 
-        self.gui.add(btn_join_game)
+    def load_gui(self):
+        self.menu_gui = pygame.sprite.Group()
+
+        # Offline game button
+        self.menu_gui.add(self.create_menu_button(
+            y=200,
+            text='Offline game',
+            on_click=self.btn_offline_game_click
+        ))
+
+        # Host an online game button
+        self.menu_gui.add(self.create_menu_button(
+            y=300,
+            text='Host an online game',
+            on_click=self.btn_host_online_game_click
+        ))
+
+        # Join an online game button
+        self.menu_gui.add(self.create_menu_button(
+            y=350,
+            text='Join an online game',
+            on_click=self.btn_join_online_game_click
+        ))
+
+        # Host a LAN game button
+        self.menu_gui.add(self.create_menu_button(
+            y=450,
+            text='Host a LAN game',
+            on_click=self.btn_host_lan_game_click
+        ))
+
+        # Join a LAN game button
+        self.menu_gui.add(self.create_menu_button(
+            y=500,
+            text='Join a LAN game',
+            on_click=self.btn_join_lan_game_click
+        ))
+
+        # Quit button
+        self.menu_gui.add(self.create_menu_button(
+            y=600,
+            text='Quit',
+            on_click=self.btn_quit_click
+        ))
 
     def draw_title(self):
         title = self.title_font.render('Connect Four ', True, constants.COLORS.WHITE.value)
@@ -78,16 +116,14 @@ class Menu:
 
     def update(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                sys.exit()
+            gui.event_handler(self.menu_gui, event)
 
         self.app.window.fill(constants.COLORS.BLACK.value)
 
         self.draw_title()
 
-        self.gui.draw(self.app.window)
+        self.menu_gui.draw(self.app.window)

@@ -1,6 +1,5 @@
 from configparser import ConfigParser
-from screens.game import Game
-from screens.menu import Menu
+from screens import menu
 import masterserver
 import pygame
 import constants
@@ -23,8 +22,7 @@ class App:
 
         self.masterserver = masterserver.MasterServer(self.get_config('master_server_endpoint'))
 
-        self.set_current_screen(Game)
-        # self.set_current_screen(Menu)
+        self.set_current_screen(menu.Menu)
 
     def load_config(self):
         logging.info('Loading configuration')
@@ -42,7 +40,7 @@ class App:
                 self.config.write(configfile)
 
     def get_config(self, key):
-        return self.config.get('connectfour', key)
+        return self.config['connectfour'][key]
 
     def set_current_screen(self, Screen):
         logging.info('Setting current screen to {}'.format(Screen))
