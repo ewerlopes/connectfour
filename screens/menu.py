@@ -18,23 +18,26 @@ class Menu:
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
 
-        logging.info('Loading GUI')
+        utils.load_music('menu.wav')
+
+        self.app.window.fill(constants.COLORS.BLACK.value)
+
+        self.draw_title()
 
         self.load_gui()
-
-        utils.load_music('menu.wav')
 
     def create_menu_button(self, y, text, on_click):
         btn_rect = pygame.Rect(0, y, 200, 40)
         btn_rect.centerx = self.app.window.get_rect().centerx
 
-        return gui.ButtonWidget(
+        return gui.Button(
             rect=btn_rect,
             font=self.normal_font,
             text=text,
             text_color=constants.COLORS.WHITE.value,
             background_color=constants.COLORS.BLUE.value,
             border_color=constants.COLORS.RED.value,
+            border_color_hover=constants.COLORS.YELLOW.value,
             on_click=on_click
         )
 
@@ -124,8 +127,5 @@ class Menu:
 
             gui.event_handler(self.menu_gui, event)
 
-        self.app.window.fill(constants.COLORS.BLACK.value)
-
-        self.draw_title()
-
+        self.menu_gui.update()
         self.menu_gui.draw(self.app.window)
