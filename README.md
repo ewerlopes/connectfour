@@ -10,11 +10,13 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
 
   - All the Connect Four rules
   - State of the art graphics
-  - Two players on the same computer
   - Chips that made the player win are highlighted
   - Sound effects!
   - Musics!
-  - (WIP) Play with your (not so) far friends through the LAN or internet (featuring a server browser)
+  - Two players either:
+    - On the same computer
+    - (WIP) LAN game
+    - (WIP) Online game
 
 ## Executables download
 
