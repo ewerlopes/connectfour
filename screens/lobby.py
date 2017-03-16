@@ -19,6 +19,7 @@ class Lobby:
         logging.info('Loading fonts')
 
         self.title_font = utils.load_font('monofur.ttf', 24)
+        self.normal_font = utils.load_font('monofur.ttf', 18)
 
         if self.lobby_type == constants.LOBBY_STATES.HOST_ONLINE_GAME:
             self.create_game()
@@ -80,6 +81,25 @@ class Lobby:
             self.draw_title('Host an online game')
         elif self.lobby_type == constants.LOBBY_STATES.JOIN_ONLINE_GAME:
             self.draw_title('Join an online game')
+
+            y = 50
+
+            for game in self.games:
+                game_name = self.normal_font.render(game['name'], True, constants.COLORS.WHITE.value)
+                game_name_rect = game_name.get_rect()
+                game_name_rect.left = 10
+                game_name_rect.top = y
+
+                self.app.window.blit(game_name, game_name_rect)
+
+                game_ip = self.normal_font.render(game['ip'] + ' (' + game['country'] + ')', True, constants.COLORS.WHITE.value)
+                game_ip_rect = game_ip.get_rect()
+                game_ip_rect.right = constants.WINDOW_SIZE[0] - 10
+                game_ip_rect.top = y
+
+                self.app.window.blit(game_ip, game_ip_rect)
+
+                y += 50
 
     def draw_title(self, text):
         title = self.title_font.render(text, True, constants.COLORS.WHITE.value)
