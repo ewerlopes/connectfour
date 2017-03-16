@@ -13,7 +13,7 @@ The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented
   - Chips that made the player win are highlighted
   - Sound effects!
   - Musics!
-  - Two players either:
+  - Two players, either:
     - On the same computer
     - (WIP) LAN game
     - (WIP) Online game

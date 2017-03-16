@@ -20,7 +20,7 @@ class App:
 
         self.load_config()
 
-        self.masterserver = masterserver.MasterServer(self.get_config('master_server_endpoint'))
+        self.master_server_client = masterserver.Client(self.get_config('master_server_endpoint'))
 
         self.set_current_screen(menu.Menu)
 
@@ -42,13 +42,13 @@ class App:
     def get_config(self, key):
         return self.config['connectfour'][key]
 
-    def set_current_screen(self, Screen):
+    def set_current_screen(self, Screen, *args):
         logging.info('Setting current screen to {}'.format(Screen))
 
         if hasattr(self, 'current_screen') and self.current_screen:
             del self.current_screen
 
-        self.current_screen = Screen(self)
+        self.current_screen = Screen(self, *args)
 
     def update(self):
         self.current_screen.update()

@@ -1,4 +1,5 @@
 from screens import game
+from screens import lobby
 import pygame
 import logging
 import constants
@@ -38,19 +39,29 @@ class Menu:
         )
 
     def btn_offline_game_click(self):
+        logging.info('Offline game button clicked')
+
         self.app.set_current_screen(game.Game)
 
     def btn_host_online_game_click(self):
         logging.info('Host an online game button clicked')
 
+        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.HOST_ONLINE_GAME)
+
     def btn_join_online_game_click(self):
         logging.info('Join an online game button clicked')
+
+        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.JOIN_ONLINE_GAME)
 
     def btn_host_lan_game_click(self):
         logging.info('Host a LAN game button clicked')
 
+        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.HOST_LAN_GAME)
+
     def btn_join_lan_game_click(self):
         logging.info('Join a LAN game button clicked')
+
+        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.JOIN_LAN_GAME)
 
     def btn_quit_click(self):
         pygame.quit()
@@ -102,7 +113,7 @@ class Menu:
         ))
 
     def draw_title(self):
-        title = self.title_font.render('Connect Four ', True, constants.COLORS.WHITE.value)
+        title = self.title_font.render('Connect Four', True, constants.COLORS.WHITE.value)
         title_rect = title.get_rect()
         title_rect.centerx = self.app.window.get_rect().centerx
         title_rect.top = 25

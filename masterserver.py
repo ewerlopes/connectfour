@@ -1,5 +1,6 @@
 from enum import Enum
 import requests
+import logging
 
 
 class GameStatus(Enum):
@@ -8,14 +9,22 @@ class GameStatus(Enum):
     FINISHED = 'FINISHED'
 
 
-class MasterServer:
+class Client:
     def __init__(self, endpoint):
+        logging.info('Initializing master server client')
+
         self.endpoint = endpoint
 
     def _call(self, method, resource, params=None, json=None):
         url = self.endpoint + resource
 
-        response = requests.request(method, url, params=params, json=json)
+        headers = {
+            'User-Agent': 'CFMS Client'
+        }
+
+        response = requests.request(method, url, params=params, json=json, headers=headers)
+
+        logging.info('Master server: {} ({} {})'.format(response.status_code, method, resource))
 
         response.raise_for_status()
 
