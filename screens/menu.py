@@ -19,7 +19,8 @@ class Menu:
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
 
-        utils.load_music('menu.wav')
+        if not pygame.mixer.music.get_busy():
+            utils.load_music('menu.wav')
 
         self.load_gui()
 
