@@ -20,7 +20,7 @@ class App:
 
         self.load_config()
 
-        self.master_server_client = masterserver.Client(self.get_config('master_server_endpoint'))
+        self.master_server_client = masterserver.Client(self.config.get('connectfour', 'master_server_endpoint'))
 
         self.set_current_screen(menu.Menu)
 
@@ -36,11 +36,10 @@ class App:
         else:
             logging.info('Configuration file does not exist')
 
+            self.config.add_section('connectfour')
+
             with open(constants.CONFIG_FILE, 'w') as configfile:
                 self.config.write(configfile)
-
-    def get_config(self, key):
-        return self.config['connectfour'][key]
 
     def set_current_screen(self, Screen, *args):
         logging.info('Setting current screen to {}'.format(Screen))
