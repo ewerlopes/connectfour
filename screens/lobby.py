@@ -1,4 +1,5 @@
 from screens import menu
+from networking import lan
 import pygame
 import logging
 import constants
@@ -22,20 +23,24 @@ class Lobby:
         self.normal_font = utils.load_font('monofur.ttf', 18)
 
         if self.lobby_type == constants.LOBBY_STATES.HOST_ONLINE_GAME:
-            self.create_game()
+            self.create_online_game()
         elif self.lobby_type == constants.LOBBY_STATES.JOIN_ONLINE_GAME:
             self.games = []
-            self.get_games()
+            self.get_online_games()
+        elif self.lobby_type == constants.LOBBY_STATES.HOST_LAN_GAME:
+            lan.Announce()
+        elif self.lobby_type == constants.LOBBY_STATES.JOIN_LAN_GAME:
+            lan.Discover()
 
-    def get_games(self):
-        logging.info('Getting games list')
+    def get_online_games(self):
+        logging.info('Getting online games list')
 
         try:
             self.games = self.app.master_server_client.get_games(constants.VERSION)
         except Exception as e:
             logging.error(e)
 
-    def create_game(self):
+    def create_online_game(self):
         if not hasattr(self.app, 'current_online_game'):
             logging.info('Creating a new online game')
 
@@ -46,9 +51,9 @@ class Lobby:
             except Exception as e:
                 logging.error(e)
 
-    def delete_game(self):
+    def delete_online_game(self):
         if hasattr(self.app, 'current_online_game') and self.app.current_online_game:
-            logging.info('Deleting the current game #{}'.format(self.app.current_online_game['id']))
+            logging.info('Deleting the current online game #{}'.format(self.app.current_online_game['id']))
 
             try:
                 self.app.master_server_client.delete_game(self.app.current_online_game['id'], self.app.current_online_game['token'])
@@ -59,13 +64,15 @@ class Lobby:
             except Exception as e:
                 logging.error(e)
         else:
-            logging.info('No current game to delete')
+            logging.info('No current online game to delete')
 
     def update(self):
         for event in pygame.event.get():
             if self.lobby_type == constants.LOBBY_STATES.HOST_ONLINE_GAME:
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                    self.delete_game()
+                    self.delete_online_game()
+
+            # TODO Kill the LAN threads if in LAN mode
 
             if event.type == pygame.QUIT:
                 pygame.quit()

@@ -13,6 +13,8 @@ BOARD_MARGIN_TOP = IMAGES_SIDE_SIZE + COLUMN_CHOOSING_MARGIN_TOP
 WINDOW_SIZE = (IMAGES_SIDE_SIZE * COLS, (IMAGES_SIDE_SIZE * ROWS) + BOARD_MARGIN_TOP)
 SOUNDS_VOLUME = 0.1
 MUSIC_VOLUME = 0.2
+LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
+LAN_PORT = 2560
 
 # When frozen by PyInstaller, the path to the resources is different
 RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'

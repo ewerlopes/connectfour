@@ -6,7 +6,7 @@ current_theme = None
 
 class DefaultTheme:
     def __init__(self):
-        self.text_color = pygame.Color('white')
+        self.text_color = pygame.Color('black')
         self.text_color_hover = pygame.Color('black')
 
         self.background_color = pygame.Color('grey')
