@@ -84,8 +84,8 @@ API) is used to centralize all Connect Four games.
   - Sound effects by [Freesfx.co.uk](http://www.freesfx.co.uk/) (© Freesfx.co.uk)
   - Musics by [SoundImage.org](http://soundimage.org/) (Royalty-Free)
   - Font by [Tobias Benjamin Köhler](http://www.dafont.com/monofur.font) (freeware)
-  - Connect Four™ is a trademark of Milton Bradley / Hasbro
   - Thanks to the [Swervin Mervin](https://github.com/buntine/SwervinMervin) game's source code who helped me a lot to properly design the architecture of my game and understand the PyGame mechanics
+  - Connect Four™ is a trademark of Milton Bradley / Hasbro. This project isn't supported nor endorsed by Milton Bradley / Hasbro
 
 ## Gotcha
 

@@ -1,7 +1,33 @@
 import pygame
 
 
+current_theme = None
+
+
+class DefaultTheme:
+    def __init__(self):
+        self.text_color = pygame.Color('white')
+        self.text_color_hover = pygame.Color('black')
+
+        self.background_color = pygame.Color('grey')
+        self.background_color_hover = pygame.Color('darkgrey')
+
+        self.border_color = pygame.Color('darkgrey')
+        self.border_color_hover = pygame.Color('black')
+
+        self.pointer = pygame.cursors.arrow
+        self.pointer_hover = pygame.cursors.tri_left
+
+
+def init(theme=DefaultTheme):
+    global current_theme
+
+    current_theme = theme()
+
+
 def event_handler(gui_group, event):
+    global current_theme
+
     for widget in gui_group:
         if isinstance(widget, Button):
             if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
@@ -9,10 +35,10 @@ def event_handler(gui_group, event):
             elif event.type == pygame.MOUSEMOTION:
                 if not widget.is_hovered and widget.rect.collidepoint(event.pos):
                     widget.is_hovered = True
-                    pygame.mouse.set_cursor(*pygame.cursors.tri_left)
                 elif widget.is_hovered and not widget.rect.collidepoint(event.pos):
                     widget.is_hovered = False
-                    pygame.mouse.set_cursor(*pygame.cursors.arrow)
+
+                pygame.mouse.set_cursor(*widget.get_pointer())
 
 
 class Widget(pygame.sprite.Sprite):
@@ -24,36 +50,45 @@ class Widget(pygame.sprite.Sprite):
     def draw(self):
         pass
 
+    def update(self):
+        self.draw()
+
+    def get_background_color(self):
+        return current_theme.background_color_hover if self.is_hovered else current_theme.background_color
+
+    def get_border_color(self):
+        return current_theme.border_color_hover if self.is_hovered else current_theme.border_color
+
+    def get_text_color(self):
+        return current_theme.text_color_hover if self.is_hovered else current_theme.text_color
+
+    def get_pointer(self):
+        return current_theme.pointer_hover if self.is_hovered else current_theme.pointer
+
 
 class Button(Widget):
     on_click = None
 
-    def __init__(self, rect, font, text, text_color, background_color, border_color, border_color_hover, on_click=None):
+    def __init__(self, rect, font, text, on_click=None):
         Widget.__init__(self)
 
         self.image = pygame.Surface(rect.size)
         self.rect = rect
         self.font = font
         self.text = text
-        self.text_color = text_color
-        self.background_color = background_color
-        self.border_color = border_color
-        self.border_color_hover = border_color_hover
         self.internal_rect = pygame.Rect(0, 0, self.rect.w, self.rect.h)
         self.on_click = on_click
 
         self.draw()
 
     def draw(self):
-        self.image.fill(self.background_color)
+        global current_theme
 
-        pygame.draw.rect(self.image, self.border_color_hover if self.is_hovered else self.border_color, self.internal_rect, 2)
+        self.image.fill(self.get_background_color())
+        pygame.draw.rect(self.image, self.get_border_color(), self.internal_rect, 1)
 
-        txt = self.font.render(self.text, True, self.text_color)
+        txt = self.font.render(self.text, True, self.get_text_color())
         txt_rect = txt.get_rect()
         txt_rect.center = self.internal_rect.center
 
         self.image.blit(txt, txt_rect)
-
-    def update(self):
-        self.draw()

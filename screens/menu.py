@@ -32,10 +32,6 @@ class Menu:
             rect=btn_rect,
             font=self.normal_font,
             text=text,
-            text_color=constants.COLORS.WHITE.value,
-            background_color=constants.COLORS.BLUE.value,
-            border_color=constants.COLORS.RED.value,
-            border_color_hover=constants.COLORS.YELLOW.value,
             on_click=on_click
         )
 
@@ -69,6 +65,8 @@ class Menu:
         sys.exit()
 
     def load_gui(self):
+        gui.init()
+
         self.menu_gui = pygame.sprite.Group()
 
         # Offline game button
@@ -135,7 +133,7 @@ class Menu:
 
             gui.event_handler(self.menu_gui, event)
 
-        self.app.window.fill(constants.COLORS.BLACK.value)
+        self.app.window.fill(constants.COLORS.WHITE.value)
 
         self.draw_title()
 
