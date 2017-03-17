@@ -17,7 +17,7 @@ class Announce(threading.Thread):
         s.bind(('', 0))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-        my_ip = socket.gethostbyname(socket.gethostname())
+        my_ip = socket.gethostbyname(socket.getfqdn())
         data = str.encode('-'.join([constants.LAN_IDENTIFIER, my_ip]))
 
         while True:
@@ -42,5 +42,8 @@ class Discover(threading.Thread):
 
             data = data.decode()
 
-            if data.startswith(constants.LAN_IDENTIFIER):
-                print('{} answered'.format(data[len(constants.LAN_IDENTIFIER) + 1:]))
+            if data:
+                data = data.split('-')
+
+                if len(data) == 2 and data[0] == constants.LAN_IDENTIFIER:
+                    print('{} seems to host a Connect Four LAN game'.format(data[1])) # TODO
