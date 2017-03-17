@@ -67,45 +67,45 @@ class Menu:
     def load_gui(self):
         gui.init()
 
-        self.menu_gui = pygame.sprite.Group()
+        self.gui_container = pygame.sprite.Group()
 
         # Offline game button
-        self.menu_gui.add(self.create_menu_button(
+        self.gui_container.add(self.create_menu_button(
             y=120,
             text='Offline game',
             on_click=self.btn_offline_game_click
         ))
 
         # Host an online game button
-        self.menu_gui.add(self.create_menu_button(
+        self.gui_container.add(self.create_menu_button(
             y=180,
             text='Host an online game',
             on_click=self.btn_host_online_game_click
         ))
 
         # Join an online game button
-        self.menu_gui.add(self.create_menu_button(
+        self.gui_container.add(self.create_menu_button(
             y=230,
             text='Join an online game',
             on_click=self.btn_join_online_game_click
         ))
 
         # Host a LAN game button
-        self.menu_gui.add(self.create_menu_button(
+        self.gui_container.add(self.create_menu_button(
             y=290,
             text='Host a LAN game',
             on_click=self.btn_host_lan_game_click
         ))
 
         # Join a LAN game button
-        self.menu_gui.add(self.create_menu_button(
+        self.gui_container.add(self.create_menu_button(
             y=340,
             text='Join a LAN game',
             on_click=self.btn_join_lan_game_click
         ))
 
         # Quit button
-        self.menu_gui.add(self.create_menu_button(
+        self.gui_container.add(self.create_menu_button(
             y=400,
             text='Quit',
             on_click=self.btn_quit_click
@@ -131,11 +131,11 @@ class Menu:
                 pygame.quit()
                 sys.exit()
 
-            gui.event_handler(self.menu_gui, event)
+            gui.event_handler(self.gui_container, event)
 
         self.app.window.fill(constants.COLORS.WHITE.value)
 
         self.draw_title()
 
-        self.menu_gui.update()
-        self.menu_gui.draw(self.app.window)
+        self.gui_container.update()
+        self.gui_container.draw(self.app.window)

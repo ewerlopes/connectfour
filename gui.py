@@ -25,10 +25,10 @@ def init(theme=DefaultTheme):
     current_theme = theme()
 
 
-def event_handler(gui_group, event):
+def event_handler(gui_container, event):
     global current_theme
 
-    for widget in gui_group:
+    for widget in gui_container:
         if isinstance(widget, Button):
             if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
                 widget.on_click()
@@ -39,6 +39,9 @@ def event_handler(gui_group, event):
                     widget.is_hovered = False
 
                 pygame.mouse.set_cursor(*widget.get_pointer())
+        elif isinstance(widget, Label):
+            if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
+                widget.on_click()
 
 
 class Widget(pygame.sprite.Sprite):
@@ -64,6 +67,25 @@ class Widget(pygame.sprite.Sprite):
 
     def get_pointer(self):
         return current_theme.pointer_hover if self.is_hovered else current_theme.pointer
+
+
+class Label(Widget):
+    on_click = None
+
+    def __init__(self, font, text, on_click=None):
+        Widget.__init__(self)
+
+        self.font = font
+        self.text = text
+        self.on_click = on_click
+
+        self.draw()
+
+    def draw(self):
+        global current_theme
+
+        self.image = self.font.render(self.text, True, self.get_text_color())
+        self.rect = txt.get_rect()
 
 
 class Button(Widget):

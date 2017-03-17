@@ -6,6 +6,7 @@ import constants
 import utils
 import sys
 import platform
+import gui
 
 
 class Lobby:
@@ -22,15 +23,19 @@ class Lobby:
         self.title_font = utils.load_font('monofur.ttf', 24)
         self.normal_font = utils.load_font('monofur.ttf', 18)
 
+        gui.init()
+
+        self.gui_container = pygame.sprite.Group()
+
         if self.lobby_type == constants.LOBBY_STATES.HOST_ONLINE_GAME:
             self.create_online_game()
         elif self.lobby_type == constants.LOBBY_STATES.JOIN_ONLINE_GAME:
             self.games = []
             self.get_online_games()
         elif self.lobby_type == constants.LOBBY_STATES.HOST_LAN_GAME:
-            lan.Announce()
+            self.lan_announcer = lan.Announce()
         elif self.lobby_type == constants.LOBBY_STATES.JOIN_LAN_GAME:
-            lan.Discover()
+            self.lan_discoverer = lan.Discover()
 
     def get_online_games(self):
         logging.info('Getting online games list')
@@ -68,11 +73,17 @@ class Lobby:
 
     def update(self):
         for event in pygame.event.get():
-            if self.lobby_type == constants.LOBBY_STATES.HOST_ONLINE_GAME:
-                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                if self.lobby_type == constants.LOBBY_STATES.HOST_ONLINE_GAME:
                     self.delete_online_game()
+                elif self.lobby_type == constants.LOBBY_STATES.HOST_LAN_GAME:
+                    self.lan_announcer.stop()
+                    del self.lan_announcer
+                elif self.lobby_type == constants.LOBBY_STATES.JOIN_LAN_GAME:
+                    self.lan_discoverer.stop()
+                    del self.lan_discoverer
 
-            # TODO Kill the LAN threads if in LAN mode
+            gui.event_handler(self.gui_container, event)
 
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -107,6 +118,9 @@ class Lobby:
                 self.app.window.blit(game_ip, game_ip_rect)
 
                 y += 50
+
+        self.gui_container.update()
+        self.gui_container.draw(self.app.window)
 
     def draw_title(self, text):
         title = self.title_font.render(text, True, constants.COLORS.WHITE.value)
