@@ -23,11 +23,15 @@ class Announce(threading.Thread):
         self.daemon = True
         self.start()
 
-    def run(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    def stop(self):
+        self.s.close()
+        self.stop()
 
-        s.bind(('', 0))
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    def run(self):
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        self.s.bind(('', 0))
+        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
         my_ip = socket.gethostbyname(socket.getfqdn())
         data = str.encode('-'.join([constants.LAN_IDENTIFIER, my_ip]))
@@ -36,7 +40,7 @@ class Announce(threading.Thread):
             if self.stopped():
                 break
 
-            s.sendto(data, ('<broadcast>', constants.LAN_PORT))
+            self.s.sendto(data, ('<broadcast>', constants.LAN_PORT))
             time.sleep(5)
 
 
@@ -47,13 +51,20 @@ class Discover(threading.Thread):
         self.daemon = True
         self.start()
 
-    def run(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    def stop(self):
+        self.s.close()
+        self.stop()
 
-        s.bind(('', constants.LAN_PORT))
+    def run(self):
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        self.s.bind(('', constants.LAN_PORT))
 
         while True:
-            data = s.recv(512)
+            if self.stopped():
+                break
+
+            data = self.s.recv(512)
 
             if data:
                 data = data.decode().split('-')
