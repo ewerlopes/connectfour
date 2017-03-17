@@ -112,14 +112,14 @@ class Menu:
         ))
 
     def draw_title(self):
-        title = self.title_font.render('Connect Four', True, constants.COLORS.WHITE.value)
+        title = self.title_font.render('Connect Four', True, constants.COLORS.BLACK.value)
         title_rect = title.get_rect()
         title_rect.centerx = self.app.window.get_rect().centerx
         title_rect.top = 25
 
         self.app.window.blit(title, title_rect)
 
-        version = self.normal_font.render('v' + constants.VERSION, True, constants.COLORS.WHITE.value)
+        version = self.normal_font.render('v' + constants.VERSION, True, constants.COLORS.BLACK.value)
         version_rect = version.get_rect()
         version_rect.topright = title_rect.bottomright
 
