@@ -61,8 +61,10 @@ class Announcer(LanGame):
 
 
 class Discoverer(LanGame):
-    def __init__(self):
+    def __init__(self, games_list):
         logging.info('Running Discoverer thread')
+
+        self.games_list = games_list
 
         LanGame.__init__(self)
 
@@ -78,9 +80,13 @@ class Discoverer(LanGame):
             if data:
                 data = json.loads(data)
 
-                print(data)
-
                 lan_identifier, host_ip, host_name = data
 
                 if lan_identifier == settings.LAN_IDENTIFIER:
-                    print('{} ({}) seems to host a Connect Four LAN game'.format(host_ip, host_name)) # TODO
+                    if host_ip not in self.games_list:
+                        self.games_list[host_ip] = {
+                            'name': host_name,
+                            'last_ping_at': time.time()
+                        }
+                    else:
+                        self.games_list[host_ip]['last_ping_at'] = time.time()
