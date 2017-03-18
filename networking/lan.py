@@ -1,7 +1,7 @@
 import time
 import socket
 import threading
-import constants
+import settings
 
 
 class StoppableThread(threading.Thread):
@@ -34,13 +34,13 @@ class Announce(threading.Thread):
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
         my_ip = socket.gethostbyname(socket.getfqdn())
-        data = str.encode('-'.join([constants.LAN_IDENTIFIER, my_ip]))
+        data = str.encode('-'.join([settings.LAN_IDENTIFIER, my_ip]))
 
         while True:
             if self.stopped():
                 break
 
-            self.s.sendto(data, ('<broadcast>', constants.LAN_PORT))
+            self.s.sendto(data, ('<broadcast>', settings.LAN_PORT))
             time.sleep(5)
 
 
@@ -58,7 +58,7 @@ class Discover(threading.Thread):
     def run(self):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        self.s.bind(('', constants.LAN_PORT))
+        self.s.bind(('', settings.LAN_PORT))
 
         while True:
             if self.stopped():
@@ -69,5 +69,5 @@ class Discover(threading.Thread):
             if data:
                 data = data.decode().split('-')
 
-                if len(data) == 2 and data[0] == constants.LAN_IDENTIFIER:
+                if len(data) == 2 and data[0] == settings.LAN_IDENTIFIER:
                     print('{} seems to host a Connect Four LAN game'.format(data[1])) # TODO

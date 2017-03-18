@@ -2,7 +2,7 @@ from screens import game
 from screens import lobby
 import pygame
 import logging
-import constants
+import settings
 import gui
 import utils
 import sys
@@ -19,8 +19,7 @@ class Menu:
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
 
-        if not pygame.mixer.music.get_busy():
-            utils.load_music('menu.wav')
+        utils.load_music('menu.wav')
 
         self.load_gui()
 
@@ -43,29 +42,29 @@ class Menu:
     def btn_host_online_game_click(self):
         logging.info('Host an online game button clicked')
 
-        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.HOST_ONLINE_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.HOST_ONLINE_GAME)
 
     def btn_join_online_game_click(self):
         logging.info('Join an online game button clicked')
 
-        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.JOIN_ONLINE_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_ONLINE_GAME)
 
     def btn_host_lan_game_click(self):
         logging.info('Host a LAN game button clicked')
 
-        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.HOST_LAN_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.HOST_LAN_GAME)
 
     def btn_join_lan_game_click(self):
         logging.info('Join a LAN game button clicked')
 
-        self.app.set_current_screen(lobby.Lobby, constants.LOBBY_STATES.JOIN_LAN_GAME)
+        self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_LAN_GAME)
 
     def btn_quit_click(self):
         pygame.quit()
         sys.exit()
 
     def load_gui(self):
-        gui.init()
+        gui.init(theme=settings.GuiTheme)
 
         self.gui_container = pygame.sprite.Group()
 
@@ -112,14 +111,14 @@ class Menu:
         ))
 
     def draw_title(self):
-        title = self.title_font.render('Connect Four', True, constants.COLORS.BLACK.value)
+        title = self.title_font.render('Connect Four', True, settings.COLORS.BLACK.value)
         title_rect = title.get_rect()
         title_rect.centerx = self.app.window.get_rect().centerx
         title_rect.top = 25
 
         self.app.window.blit(title, title_rect)
 
-        version = self.normal_font.render('v' + constants.VERSION, True, constants.COLORS.BLACK.value)
+        version = self.normal_font.render('v' + settings.VERSION, True, settings.COLORS.BLACK.value)
         version_rect = version.get_rect()
         version_rect.topright = title_rect.bottomright
 
@@ -133,7 +132,7 @@ class Menu:
 
             gui.event_handler(self.gui_container, event)
 
-        self.app.window.fill(constants.COLORS.WHITE.value)
+        self.app.window.fill(settings.COLORS.WHITE.value)
 
         self.draw_title()
 

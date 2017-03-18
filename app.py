@@ -2,7 +2,7 @@ from configparser import ConfigParser
 from screens import menu
 from networking import cfms
 import pygame
-import constants
+import settings
 import utils
 import logging
 import os
@@ -13,9 +13,9 @@ class App:
         logging.info('Initializing app')
 
         self.clock = pygame.time.Clock()
-        self.window = pygame.display.set_mode(constants.WINDOW_SIZE, pygame.DOUBLEBUF)
+        self.window = pygame.display.set_mode(settings.WINDOW_SIZE, pygame.DOUBLEBUF)
 
-        pygame.display.set_caption('Connect Four ' + constants.VERSION)
+        pygame.display.set_caption('Connect Four ' + settings.VERSION)
         pygame.display.set_icon(utils.load_image('icon.png'))
 
         self.load_config()
@@ -27,18 +27,18 @@ class App:
     def load_config(self):
         logging.info('Loading configuration')
 
-        self.config = ConfigParser(defaults=constants.DEFAULT_CONFIG)
+        self.config = ConfigParser(defaults=settings.DEFAULT_CONFIG)
 
-        if os.path.isfile(constants.CONFIG_FILE):
+        if os.path.isfile(settings.CONFIG_FILE):
             logging.info('Configuration file exist')
 
-            self.config.read(constants.CONFIG_FILE)
+            self.config.read(settings.CONFIG_FILE)
         else:
             logging.info('Configuration file does not exist')
 
             self.config.add_section('connectfour')
 
-            with open(constants.CONFIG_FILE, 'w') as configfile:
+            with open(settings.CONFIG_FILE, 'w') as configfile:
                 self.config.write(configfile)
 
     def set_current_screen(self, Screen, *args):
@@ -54,4 +54,4 @@ class App:
 
         pygame.display.update()
 
-        self.clock.tick(constants.FPS)
+        self.clock.tick(settings.FPS)

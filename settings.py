@@ -2,6 +2,8 @@ from enum import Enum
 import pygame
 import sys
 import os
+import gui
+import utils
 
 VERSION = '1.0'
 FPS = 30
@@ -23,6 +25,14 @@ CONFIG_FILE = 'connectfour.ini'
 DEFAULT_CONFIG = {
     'master_server_endpoint': 'https://cfg.epoc.fr/api/'
 }
+
+
+class GuiTheme(gui.DefaultTheme):
+    def __init__(self):
+        gui.DefaultTheme.__init__(self)
+
+        self.hover_sound = utils.load_sound('hover.wav')
+        self.click_sound = utils.load_sound('click.wav')
 
 
 class COLORS(Enum):
