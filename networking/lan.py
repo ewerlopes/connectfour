@@ -3,7 +3,6 @@ import socket
 import threading
 import settings
 import logging
-import platform
 import json
 
 
@@ -44,10 +43,12 @@ class Announcer(LanGame):
         self.s.bind(('', 0))
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
+        hostname = socket.getfqdn()
+
         data = [
-            settings.LAN_IDENTIFIER,
-            socket.gethostbyname(socket.getfqdn()),
-            platform.node()
+            settings.LAN_IDENTIFIER, # Magic ID to recognize a Connect Four LAN game announcement
+            socket.gethostbyname(hostname), # IP of this announcer
+            hostname # Name of the game (currently the hostname of this announcer)
         ]
 
         data = str.encode(json.dumps(data))

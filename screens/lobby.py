@@ -5,7 +5,7 @@ import logging
 import settings
 import utils
 import sys
-import platform
+import socket
 import gui
 import time
 
@@ -66,7 +66,7 @@ class Lobby:
             logging.info('Creating a new online game')
 
             try:
-                self.app.current_online_game = self.app.master_server_client.create_game(platform.node(), settings.VERSION)
+                self.app.current_online_game = self.app.master_server_client.create_game(socket.getfqdn(), settings.VERSION)
 
                 # TODO Start a looping thread that POST to /games/{id} every 3 minutes without any parameter (to update the last_ping_at attribute)
             except Exception as e:

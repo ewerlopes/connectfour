@@ -1,3 +1,4 @@
 pygame
 PyInstaller
 requests
+autobahn
