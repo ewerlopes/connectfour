@@ -34,15 +34,15 @@ def event_handler(gui_container, event):
     for widget in gui_container:
         if isinstance(widget, Button):
             if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
-                if current_theme.hover_sound:
-                    current_theme.hover_sound.stop()
-                    current_theme.hover_sound.play()
+                if current_theme.click_sound:
+                    current_theme.click_sound.stop()
+                    current_theme.click_sound.play()
 
                 widget.on_click()
             elif event.type == pygame.MOUSEMOTION:
                 if not widget.is_hovered and widget.rect.collidepoint(event.pos):
-                    if current_theme.click_sound:
-                        current_theme.click_sound.play()
+                    if current_theme.hover_sound:
+                        current_theme.hover_sound.play()
 
                     widget.is_hovered = True
 
@@ -53,9 +53,9 @@ def event_handler(gui_container, event):
                     pygame.mouse.set_cursor(*widget.get_pointer())
         elif isinstance(widget, Label):
             if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
-                if current_theme.hover_sound:
-                    current_theme.hover_sound.stop()
-                    current_theme.hover_sound.play()
+                if current_theme.click_sound:
+                    current_theme.click_sound.stop()
+                    current_theme.click_sound.play()
 
                 widget.on_click()
 
