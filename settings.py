@@ -13,8 +13,6 @@ ROWS = 6
 COLUMN_CHOOSING_MARGIN_TOP = 50
 BOARD_MARGIN_TOP = IMAGES_SIDE_SIZE + COLUMN_CHOOSING_MARGIN_TOP
 WINDOW_SIZE = (IMAGES_SIDE_SIZE * COLS, (IMAGES_SIDE_SIZE * ROWS) + BOARD_MARGIN_TOP)
-SOUNDS_VOLUME = 0.1
-MUSIC_VOLUME = 0.2
 LAN_IDENTIFIER = '51af46a9396f46cdae0eedc4efa9d7a1'
 LAN_PORT = 2560
 
@@ -23,16 +21,18 @@ RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen
 
 CONFIG_FILE = 'connectfour.ini'
 DEFAULT_CONFIG = {
-    'master_server_endpoint': 'https://cfg.epoc.fr/api/'
+    'master_server_endpoint': 'https://cfg.epoc.fr/api/',
+    'sounds_volume': 0.1,
+    'music_volume': 0.2
 }
 
 
 class GuiTheme(gui.DefaultTheme):
-    def __init__(self):
+    def __init__(self, sounds_volume=0.5):
         gui.DefaultTheme.__init__(self)
 
-        self.hover_sound = utils.load_sound('hover.wav')
-        self.click_sound = utils.load_sound('click.wav')
+        self.hover_sound = utils.load_sound('hover.wav', volume=sounds_volume)
+        self.click_sound = utils.load_sound('click.wav', volume=sounds_volume)
 
 
 class COLORS(Enum):

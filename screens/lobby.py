@@ -33,9 +33,9 @@ class Lobby:
             self.games = []
             self.get_online_games()
         elif self.lobby_type == settings.LOBBY_STATES.HOST_LAN_GAME:
-            self.lan_announcer = lan.Announce()
+            self.lan_announcer = lan.Announcer()
         elif self.lobby_type == settings.LOBBY_STATES.JOIN_LAN_GAME:
-            self.lan_discoverer = lan.Discover()
+            self.lan_discoverer = lan.Discoverer()
 
     def get_online_games(self):
         logging.info('Getting online games list')

@@ -27,7 +27,7 @@ class App:
     def load_config(self):
         logging.info('Loading configuration')
 
-        self.config = ConfigParser(defaults=settings.DEFAULT_CONFIG)
+        self.config = ConfigParser(defaults=settings.DEFAULT_CONFIG, interpolation=None)
 
         if os.path.isfile(settings.CONFIG_FILE):
             logging.info('Configuration file exist')

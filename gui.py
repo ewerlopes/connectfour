@@ -22,10 +22,10 @@ class DefaultTheme:
         self.click_sound = None
 
 
-def init(theme=DefaultTheme):
+def init(theme=DefaultTheme()):
     global current_theme
 
-    current_theme = theme()
+    current_theme = theme
 
 
 def event_handler(gui_container, event):

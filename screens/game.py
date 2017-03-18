@@ -26,12 +26,15 @@ class Game:
 
         logging.info('Loading sounds')
 
-        self.placed_sound = utils.load_sound('placed.wav')
-        self.column_change_sound = utils.load_sound('column_change.wav')
-        self.column_full_sound = utils.load_sound('column_full.wav')
-        self.win_sound = utils.load_sound('win.wav')
-        self.applause_sound = utils.load_sound('applause.wav')
-        self.boo_sound = utils.load_sound('boo.wav')
+        self.sounds_volume = self.app.config.getfloat('connectfour', 'sounds_volume')
+        self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
+
+        self.placed_sound = utils.load_sound('placed.wav', volume=self.sounds_volume)
+        self.column_change_sound = utils.load_sound('column_change.wav', volume=self.sounds_volume)
+        self.column_full_sound = utils.load_sound('column_full.wav', volume=self.sounds_volume)
+        self.win_sound = utils.load_sound('win.wav', volume=self.sounds_volume)
+        self.applause_sound = utils.load_sound('applause.wav', volume=self.sounds_volume)
+        self.boo_sound = utils.load_sound('boo.wav', volume=self.sounds_volume)
 
         logging.info('Loading fonts')
 
@@ -65,7 +68,7 @@ class Game:
 
         logging.info('Loading random music')
 
-        utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'])
+        utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
 
     def draw_game_name(self):
         text = self.normal_font.render('Connect Four v' + settings.VERSION, True, settings.COLORS.WHITE.value)

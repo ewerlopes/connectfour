@@ -19,7 +19,9 @@ class Menu:
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
 
-        utils.load_music('menu.wav')
+        self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
+
+        utils.load_music('menu.wav', volume=self.musics_volume)
 
         self.load_gui()
 
@@ -64,7 +66,7 @@ class Menu:
         sys.exit()
 
     def load_gui(self):
-        gui.init(theme=settings.GuiTheme)
+        gui.init(theme=settings.GuiTheme(sounds_volume=self.app.config.getfloat('connectfour', 'sounds_volume')))
 
         self.gui_container = pygame.sprite.Group()
 

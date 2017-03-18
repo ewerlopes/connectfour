@@ -2,11 +2,15 @@ import time
 import socket
 import threading
 import settings
+import logging
+import platform
+import json
 
 
 class StoppableThread(threading.Thread):
     def __init__(self):
-        super(StoppableThread, self).__init__()
+        threading.Thread.__init__(self)
+
         self._stop = threading.Event()
 
     def stop(self):
@@ -16,25 +20,37 @@ class StoppableThread(threading.Thread):
         return self._stop.isSet()
 
 
-class Announce(threading.Thread):
+class LanGame(StoppableThread):
     def __init__(self):
-        threading.Thread.__init__(self)
+        StoppableThread.__init__(self)
+
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         self.daemon = True
         self.start()
 
     def stop(self):
         self.s.close()
-        self.stop()
+        super(LanGame, self).stop()
+
+
+class Announcer(LanGame):
+    def __init__(self):
+        logging.info('Running Announcer thread')
+
+        LanGame.__init__(self)
 
     def run(self):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         self.s.bind(('', 0))
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-        my_ip = socket.gethostbyname(socket.getfqdn())
-        data = str.encode('-'.join([settings.LAN_IDENTIFIER, my_ip]))
+        data = [
+            settings.LAN_IDENTIFIER,
+            socket.gethostbyname(socket.getfqdn()),
+            platform.node()
+        ]
+
+        data = str.encode(json.dumps(data))
 
         while True:
             if self.stopped():
@@ -44,30 +60,27 @@ class Announce(threading.Thread):
             time.sleep(5)
 
 
-class Discover(threading.Thread):
+class Discoverer(LanGame):
     def __init__(self):
-        threading.Thread.__init__(self)
+        logging.info('Running Discoverer thread')
 
-        self.daemon = True
-        self.start()
-
-    def stop(self):
-        self.s.close()
-        self.stop()
+        LanGame.__init__(self)
 
     def run(self):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
         self.s.bind(('', settings.LAN_PORT))
 
         while True:
             if self.stopped():
                 break
 
-            data = self.s.recv(512)
+            data = self.s.recv(512).decode()
 
             if data:
-                data = data.decode().split('-')
+                data = json.loads(data)
 
-                if len(data) == 2 and data[0] == settings.LAN_IDENTIFIER:
-                    print('{} seems to host a Connect Four LAN game'.format(data[1])) # TODO
+                print(data)
+
+                lan_identifier, host_ip, host_name = data
+
+                if lan_identifier == settings.LAN_IDENTIFIER:
+                    print('{} ({}) seems to host a Connect Four LAN game'.format(host_ip, host_name)) # TODO
