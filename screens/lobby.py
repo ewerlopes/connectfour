@@ -1,5 +1,6 @@
 from screens import menu
-from networking import lan
+import networking.lan
+import networking.engine
 import pygame
 import logging
 import settings
@@ -35,10 +36,14 @@ class Lobby:
             self.get_online_games()
             pygame.time.set_timer(settings.EVENTS.GET_ONLINE_GAMES.value, 5000)
         elif self.lobby_type == settings.LOBBY_STATES.HOST_LAN_GAME:
-            self.lan_announcer = lan.Announcer()
+            self.lan_announcer = networking.lan.Announcer()
+
+            #networking.engine.run_server()
         elif self.lobby_type == settings.LOBBY_STATES.JOIN_LAN_GAME:
-            self.lan_discoverer = lan.Discoverer(self.games_list)
+            self.lan_discoverer = networking.lan.Discoverer(self.games_list)
             pygame.time.set_timer(settings.EVENTS.CLEAN_LAN_GAMES.value, 3000)
+
+            #networking.engine.run_client()
 
     def get_online_games(self):
         logging.info('Getting online games list')
