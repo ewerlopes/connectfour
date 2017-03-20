@@ -43,15 +43,16 @@ class Announcer(LanGame):
         self.s.bind(('', 0))
         self.s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-        hostname = socket.getfqdn()
+        hostname = socket.gethostname()
 
         data = [
-            settings.LAN_IDENTIFIER, # Magic ID to recognize a Connect Four LAN game announcement
             socket.gethostbyname(hostname), # IP of this announcer
             hostname # Name of the game (currently the hostname of this announcer)
         ]
 
-        data = str.encode(json.dumps(data))
+        # settings.LAN_IDENTIFIER is the magic ID to recognize a Connect Four LAN game announcement
+
+        data = str.encode(settings.LAN_IDENTIFIER + json.dumps(data))
 
         while True:
             if self.stopped():
@@ -76,18 +77,27 @@ class Discoverer(LanGame):
             if self.stopped():
                 break
 
-            data = self.s.recv(512).decode()
+            try:
+                data = self.s.recv(512).decode()
+            except:
+                continue
 
             if data:
-                data = json.loads(data)
+                if not data.startswith(settings.LAN_IDENTIFIER):
+                    continue
 
-                lan_identifier, host_ip, host_name = data
+                data = data.replace(settings.LAN_IDENTIFIER, '')
 
-                if lan_identifier == settings.LAN_IDENTIFIER:
-                    if host_ip not in self.games_list:
-                        self.games_list[host_ip] = {
-                            'name': host_name,
-                            'last_ping_at': time.time()
-                        }
-                    else:
-                        self.games_list[host_ip]['last_ping_at'] = time.time()
+                try:
+                    data = json.loads(data)
+                except:
+                    continue
+
+                host_ip, game_name = data
+
+                # We don't care if this host already exists in the games list. Erase existing so this will always update
+                # old values like the game name which can change.
+                self.games_list[host_ip] = {
+                    'name': game_name,
+                    'last_ping_at': time.time()
+                }
