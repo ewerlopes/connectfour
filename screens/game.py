@@ -285,7 +285,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(menu.Menu)
+                        self.app.set_current_screen(menu.Menu, True)
                     elif event.key == pygame.K_LEFT: # Move chip to the left
                         self.column_change_sound.play()
 
@@ -344,7 +344,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(menu.Menu)
+                        self.app.set_current_screen(menu.Menu, True)
                     else: # Pressing any key will start a new game
                         self.init_new_game()
                 elif event.type == settings.EVENTS.WINNER_CHIPS_EVENT.value:
@@ -364,7 +364,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(menu.Menu)
+                        self.app.set_current_screen(menu.Menu, True)
                     else:
                         self.init_new_game()
 

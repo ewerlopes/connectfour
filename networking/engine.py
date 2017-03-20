@@ -66,7 +66,6 @@ def run_client():
 
     loop = asyncio.get_event_loop()
     coro = loop.create_connection(factory, '127.0.0.1', 80)
-    task = loop.create_task(coro)
-    loop.run_until_complete(task)
+    loop.run_until_complete(coro)
     loop.run_forever()
     loop.close()

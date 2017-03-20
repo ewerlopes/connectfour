@@ -9,7 +9,7 @@ import sys
 
 
 class Menu:
-    def __init__(self, app):
+    def __init__(self, app, force_music=False):
         logging.info('Initializing menu')
 
         self.app = app
@@ -21,7 +21,8 @@ class Menu:
 
         self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
 
-        utils.load_music('menu.wav', volume=self.musics_volume)
+        if not pygame.mixer.music.get_busy() or force_music:
+            utils.load_music('menu.wav', volume=self.musics_volume)
 
         self.load_gui()
 
