@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from screens import menu
-from networking import cfms
+from networking.online import CFMSClient
 import pygame
 import settings
 import utils
@@ -20,7 +20,7 @@ class App:
 
         self.load_config()
 
-        self.master_server_client = cfms.Client(self.config.get('connectfour', 'master_server_endpoint'))
+        self.master_server_client = CFMSClient(self.config.get('connectfour', 'master_server_endpoint'))
 
         self.set_current_screen(menu.Menu)
 

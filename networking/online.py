@@ -9,7 +9,12 @@ class GameStatus(Enum):
     FINISHED = 'FINISHED'
 
 
-class Client:
+class GameWinner(Enum):
+    RED = 'RED'
+    YELLOW = 'YELLOW'
+
+
+class CFMSClient:
     def __init__(self, endpoint):
         logging.info('Initializing master server client')
 
@@ -54,7 +59,12 @@ class Client:
         }
 
         if status:
-            json['status'] = status
+            valid_statuses = [GameStatus.PLAYING, GameStatus.FINISHED]
+
+            if status not in valid_statuses:
+                raise ValueError('Invalid status. It can be one of: {}'.format(', '.join([s for s in valid_statuses])))
+
+            json['status'] = status.value
 
         if name:
             json['name'] = name
@@ -63,7 +73,10 @@ class Client:
             json['version'] = version
 
         if winner:
-            json['winner'] = winner
+            if winner not in GameWinner:
+                raise ValueError('Invalid winner. It can be one of: {}'.format(', '.join([w for w in GameWinner])))
+
+            json['winner'] = winner.value
 
         return self._call('PUT', 'games/{}'.format(id), json=json)
 
