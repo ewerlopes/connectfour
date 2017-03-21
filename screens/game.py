@@ -110,6 +110,8 @@ class Game:
         elif cell == self.current_player.name and cell == previous_chip:
             self.current_consecutive_chips.append((x, y))
             consecutive_chips += 1
+        elif cell != self.current_player.name:
+            consecutive_chips = 0
 
         x, y = self.compute_direction_pos(x, y, direction)
 
@@ -142,9 +144,10 @@ class Game:
                 elif cell == self.current_player.name and cell == previous_chip:
                     self.current_consecutive_chips.append((x, y))
                     consecutive_chips += 1
+                elif cell != self.current_player.name:
+                    consecutive_chips = 0
 
                 if consecutive_chips == 4:
-                    self.set_highlighted_chips()
                     return True
 
                 previous_chip = cell
@@ -165,9 +168,10 @@ class Game:
                 elif cell == self.current_player.name and cell == previous_chip:
                     self.current_consecutive_chips.append((x, y))
                     consecutive_chips += 1
+                elif cell != self.current_player.name:
+                    consecutive_chips = 0
 
                 if consecutive_chips == 4:
-                    self.set_highlighted_chips()
                     return True
 
                 previous_chip = cell
@@ -181,7 +185,6 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
 
             if consecutive_chips == 4:
-                self.set_highlighted_chips()
                 return True
 
         self.current_consecutive_chips.clear()
@@ -193,7 +196,6 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, -1))
 
             if consecutive_chips == 4:
-                self.set_highlighted_chips()
                 return True
 
         self.current_consecutive_chips.clear()
@@ -205,7 +207,6 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
-                self.set_highlighted_chips()
                 return True
 
         self.current_consecutive_chips.clear()
@@ -217,7 +218,6 @@ class Game:
             consecutive_chips = self.count_consecutive_diagonal_chips(0, None, x, y, (1, 1))
 
             if consecutive_chips == 4:
-                self.set_highlighted_chips()
                 return True
 
         self.current_consecutive_chips.clear()
@@ -314,6 +314,7 @@ class Game:
                             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
                             if self.did_i_win():
+                                self.set_highlighted_chips()
                                 pygame.mixer.music.stop()
                                 self.win_sound.play()
                                 self.applause_sound.play()
