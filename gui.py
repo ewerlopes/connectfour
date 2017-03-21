@@ -7,16 +7,19 @@ current_theme = None
 class DefaultTheme:
     def __init__(self):
         self.text_color = pygame.Color('black')
-        self.text_color_hover = pygame.Color('black')
+        self.text_color_hovered = pygame.Color('black')
+        self.text_color_disabled = pygame.Color('grey')
 
         self.background_color = pygame.Color('grey')
-        self.background_color_hover = pygame.Color('darkgrey')
+        self.background_color_hovered = pygame.Color('darkgrey')
+        self.background_color_disabled = pygame.Color('darkgrey')
 
         self.border_color = pygame.Color('darkgrey')
-        self.border_color_hover = pygame.Color('black')
+        self.border_color_hovered = pygame.Color('black')
+        self.border_color_disabled = pygame.Color('darkgrey')
 
         self.pointer = pygame.cursors.arrow
-        self.pointer_hover = pygame.cursors.tri_left
+        self.pointer_hovered = pygame.cursors.tri_left
 
         self.hover_sound = None
         self.click_sound = None
@@ -33,13 +36,13 @@ def event_handler(gui_container, event):
 
     for widget in gui_container:
         if isinstance(widget, Button):
-            if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
+            if not widget.is_disabled and widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
                 if current_theme.click_sound:
                     current_theme.click_sound.stop()
                     current_theme.click_sound.play()
 
                 widget.on_click()
-            elif event.type == pygame.MOUSEMOTION:
+            elif not widget.is_disabled and event.type == pygame.MOUSEMOTION:
                 if not widget.is_hovered and widget.rect.collidepoint(event.pos):
                     if current_theme.hover_sound:
                         current_theme.hover_sound.play()
@@ -52,7 +55,7 @@ def event_handler(gui_container, event):
 
                     pygame.mouse.set_cursor(*widget.get_pointer())
         elif isinstance(widget, Label):
-            if widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
+            if not widget.is_disabled and widget.on_click is not None and event.type == pygame.MOUSEBUTTONDOWN and widget.rect.collidepoint(event.pos):
                 if current_theme.click_sound:
                     current_theme.click_sound.stop()
                     current_theme.click_sound.play()
@@ -62,9 +65,12 @@ def event_handler(gui_container, event):
 
 class Widget(pygame.sprite.Sprite):
     is_hovered = False
+    is_disabled = False
 
-    def __init__(self):
+    def __init__(self, disabled=False):
         pygame.sprite.Sprite.__init__(self)
+
+        self.is_disabled = disabled
 
     def draw(self):
         pass
@@ -73,16 +79,34 @@ class Widget(pygame.sprite.Sprite):
         self.draw()
 
     def get_background_color(self):
-        return current_theme.background_color_hover if self.is_hovered else current_theme.background_color
+        if self.is_hovered:
+            return current_theme.background_color_hovered
+        elif self.is_disabled:
+            return current_theme.background_color_disabled
+        else:
+            return current_theme.background_color
 
     def get_border_color(self):
-        return current_theme.border_color_hover if self.is_hovered else current_theme.border_color
+        if self.is_hovered:
+            return current_theme.border_color_hovered
+        elif self.is_disabled:
+            return current_theme.border_color_disabled
+        else:
+            return current_theme.border_color
 
     def get_text_color(self):
-        return current_theme.text_color_hover if self.is_hovered else current_theme.text_color
+        if self.is_hovered:
+            return current_theme.text_color_hovered
+        elif self.is_disabled:
+            return current_theme.text_color_disabled
+        else:
+            return current_theme.text_color
 
     def get_pointer(self):
-        return current_theme.pointer_hover if self.is_hovered else current_theme.pointer
+        if self.is_hovered:
+            return current_theme.pointer_hovered
+        else:
+            return current_theme.pointer
 
 
 class Label(Widget):
@@ -107,8 +131,8 @@ class Label(Widget):
 class Button(Widget):
     on_click = None
 
-    def __init__(self, rect, font, text, on_click=None):
-        Widget.__init__(self)
+    def __init__(self, rect, font, text, on_click=None, disabled=False):
+        Widget.__init__(self, disabled=disabled)
 
         self.image = pygame.Surface(rect.size)
         self.rect = rect

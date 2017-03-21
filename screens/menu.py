@@ -26,7 +26,7 @@ class Menu:
 
         self.load_gui()
 
-    def create_menu_button(self, y, text, on_click):
+    def create_menu_button(self, y, text, on_click, disabled=False):
         btn_rect = pygame.Rect(0, y, 200, 40)
         btn_rect.centerx = self.app.window.get_rect().centerx
 
@@ -34,7 +34,8 @@ class Menu:
             rect=btn_rect,
             font=self.normal_font,
             text=text,
-            on_click=on_click
+            on_click=on_click,
+            disabled=disabled
         )
 
     def btn_offline_game_click(self):
@@ -82,28 +83,32 @@ class Menu:
         self.gui_container.add(self.create_menu_button(
             y=180,
             text='Host an online game',
-            on_click=self.btn_host_online_game_click
+            on_click=self.btn_host_online_game_click,
+            disabled=True
         ))
 
         # Join an online game button
         self.gui_container.add(self.create_menu_button(
             y=230,
             text='Join an online game',
-            on_click=self.btn_join_online_game_click
+            on_click=self.btn_join_online_game_click,
+            disabled=True
         ))
 
         # Host a LAN game button
         self.gui_container.add(self.create_menu_button(
             y=290,
             text='Host a LAN game',
-            on_click=self.btn_host_lan_game_click
+            on_click=self.btn_host_lan_game_click,
+            disabled=True
         ))
 
         # Join a LAN game button
         self.gui_container.add(self.create_menu_button(
             y=340,
             text='Join a LAN game',
-            on_click=self.btn_join_lan_game_click
+            on_click=self.btn_join_lan_game_click,
+            disabled=True
         ))
 
         # Quit button

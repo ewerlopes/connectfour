@@ -47,6 +47,8 @@ class App:
         if hasattr(self, 'current_screen') and self.current_screen:
             del self.current_screen
 
+        pygame.mouse.set_cursor(*pygame.cursors.arrow)
+
         self.current_screen = Screen(self, *args)
 
     def update(self):

@@ -22,7 +22,7 @@ class ConnectFourServerProtocol(WebSocketServerProtocol):
     def sendMessage(self, payload, isBinary):
         payload = json.dumps(payload, ensure_ascii=False).encode('utf8')
 
-        super(WebSocketClientProtocol, self).sendMessage(payload, isBinary)
+        super(WebSocketServerProtocol, self).sendMessage(payload, isBinary)
 
 
 class ConnectFourClientProtocol(WebSocketClientProtocol):
