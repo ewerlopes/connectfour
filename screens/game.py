@@ -286,7 +286,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
                         self.app.set_current_screen(menu.Menu, True)
-                    elif event.key == pygame.K_LEFT: # Move chip to the left
+                    elif event.key == pygame.K_LEFT and self.current_player_chip: # Move chip to the left
                         self.column_change_sound.play()
 
                         if self.current_player_chip.rect.left - settings.IMAGES_SIDE_SIZE >= 0: # The chip will not go beyond the screen
@@ -295,7 +295,7 @@ class Game:
                         else: # The chip will go beyond the screen: put it in the far right
                             self.current_player_chip.rect.right = settings.WINDOW_SIZE[0]
                             self.current_player_chip_column = settings.COLS - 1
-                    elif event.key == pygame.K_RIGHT: # Move chip to the right
+                    elif event.key == pygame.K_RIGHT and self.current_player_chip: # Move chip to the right
                         self.column_change_sound.play()
 
                         if self.current_player_chip.rect.right + settings.IMAGES_SIDE_SIZE <= settings.WINDOW_SIZE[0]: # The chip will not go beyond the screen
@@ -304,7 +304,7 @@ class Game:
                         else: # The chip will go beyond the screen: put it in the far left
                             self.current_player_chip.rect.left = 0
                             self.current_player_chip_column = 0
-                    elif event.key == pygame.K_DOWN: # Drop the chip in the current column
+                    elif event.key == pygame.K_DOWN and self.current_player_chip: # Drop the chip in the current column
                         # Check all rows in the currently selected column starting from the top
                         chip_row_stop = self.get_free_row(self.current_player_chip_column)
 
