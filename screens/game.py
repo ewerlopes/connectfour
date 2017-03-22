@@ -349,7 +349,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
                         self.app.set_current_screen(menu.Menu, True)
-                    else: # Pressing any key will start a new game
+                    elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.init_new_game()
                 elif event.type == settings.EVENTS.WINNER_CHIPS_EVENT.value:
                     for x in range(0, settings.COLS):
@@ -369,7 +369,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
                         self.app.set_current_screen(menu.Menu, True)
-                    else:
+                    elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.init_new_game()
 
             self.draw_status('Shame, no one win.', settings.COLORS.WHITE.value)
