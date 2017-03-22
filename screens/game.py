@@ -113,6 +113,9 @@ class Game:
         elif cell != self.current_player.name:
             consecutive_chips = 0
 
+        if consecutive_chips == 4:
+            return consecutive_chips
+
         x, y = self.compute_direction_pos(x, y, direction)
 
         previous_chip = cell
