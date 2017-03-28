@@ -38,12 +38,12 @@ class Lobby:
         elif self.lobby_type == settings.LOBBY_STATES.HOST_LAN_GAME:
             self.lan_announcer = networking.lan.Announcer()
 
-            #networking.engine.run_server()
+            #networking.engine.Engine(settings.NETWORK_ENGINE_MODE.HOST)
         elif self.lobby_type == settings.LOBBY_STATES.JOIN_LAN_GAME:
             self.lan_discoverer = networking.lan.Discoverer(self.games_list)
             pygame.time.set_timer(settings.EVENTS.CLEAN_LAN_GAMES.value, 3000)
 
-            #networking.engine.run_client()
+            #networking.engine.Engine(settings.NETWORK_ENGINE_MODE.JOIN)
 
     def get_online_games(self):
         logging.info('Getting online games list')

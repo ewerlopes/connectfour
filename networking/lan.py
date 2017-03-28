@@ -23,13 +23,13 @@ class LanGame(StoppableThread):
     def __init__(self):
         StoppableThread.__init__(self)
 
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         self.daemon = True
         self.start()
 
     def stop(self):
-        self.s.close()
+        self.socket.close()
         super(LanGame, self).stop()
 
 
@@ -40,8 +40,8 @@ class Announcer(LanGame):
         LanGame.__init__(self)
 
     def run(self):
-        self.s.bind(('', 0))
-        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.socket.bind(('', 0))
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
         hostname = socket.gethostname()
 
@@ -58,7 +58,7 @@ class Announcer(LanGame):
             if self.stopped():
                 break
 
-            self.s.sendto(data, ('<broadcast>', settings.LAN_PORT))
+            self.socket.sendto(data, ('<broadcast>', settings.LAN_PORT))
             time.sleep(5)
 
 
@@ -71,14 +71,14 @@ class Discoverer(LanGame):
         LanGame.__init__(self)
 
     def run(self):
-        self.s.bind(('', settings.LAN_PORT))
+        self.socket.bind(('', settings.LAN_PORT))
 
         while True:
             if self.stopped():
                 break
 
             try:
-                data = self.s.recv(512).decode()
+                data = self.socket.recv(512).decode()
             except:
                 continue
 

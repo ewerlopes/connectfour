@@ -61,3 +61,8 @@ class LOBBY_STATES(Enum):
     HOST_LAN_GAME = 4
     JOIN_ONLINE_GAME = 6
     JOIN_LAN_GAME = 8
+
+
+class NETWORK_ENGINE_MODE(Enum):
+    HOST = 2
+    JOIN = 4
