@@ -8,7 +8,7 @@ import json
 
 class StoppableThread(threading.Thread):
     def __init__(self):
-        threading.Thread.__init__(self)
+        super(StoppableThread, self).__init__()
 
         self._stop = threading.Event()
 
@@ -21,7 +21,7 @@ class StoppableThread(threading.Thread):
 
 class LanGame(StoppableThread):
     def __init__(self):
-        StoppableThread.__init__(self)
+        super(LanGame, self).__init__()
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -37,7 +37,9 @@ class Announcer(LanGame):
     def __init__(self):
         logging.info('Running Announcer thread')
 
-        LanGame.__init__(self)
+        super(Announcer, self).__init__()
+
+        self.name = 'LanAnnouncer'
 
     def run(self):
         self.socket.bind(('', 0))
@@ -63,12 +65,14 @@ class Announcer(LanGame):
 
 
 class Discoverer(LanGame):
-    def __init__(self, games_list):
+    def __init__(self, app, games_list):
         logging.info('Running Discoverer thread')
-
+        self.app = app
         self.games_list = games_list
 
-        LanGame.__init__(self)
+        super(Discoverer, self).__init__()
+
+        self.name = 'LanDiscoverer'
 
     def run(self):
         self.socket.bind(('', settings.LAN_PORT))
@@ -101,3 +105,5 @@ class Discoverer(LanGame):
                     'name': game_name,
                     'last_ping_at': time.time()
                 }
+
+                self.app.update_games_list_gui()

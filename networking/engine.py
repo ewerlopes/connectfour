@@ -8,7 +8,7 @@ import settings
 
 class StoppableThread(threading.Thread):
     def __init__(self):
-        threading.Thread.__init__(self)
+        super(StoppableThread, self).__init__()
 
         self._stop = threading.Event()
 
@@ -20,30 +20,32 @@ class StoppableThread(threading.Thread):
 
 
 class Engine(StoppableThread):
-    def __init__(self, mode):
-        StoppableThread.__init__(self)
+    def __init__(self, mode, ip):
+        super(Engine, self).__init__()
 
         self.mode = mode
+        self.ip = ip
         self.daemon = True
+        self.name = str(mode)
         self.start()
 
     def run(self):
-        if mode == settings.NETWORK_ENGINE_MODE.HOST:
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+
+        if self.mode == settings.NETWORK_ENGINE_MODE.HOST:
             self.factory = WebSocketServerFactory()
             self.factory.protocol = ConnectFourServerProtocol
 
-            self.loop = asyncio.get_event_loop()
-            self.coro = self.loop.create_server(self.factory, '127.0.0.1', 80)
-            self.connection = self.loop.run_until_complete(self.coro)
-            self.loop.run_forever()
-        elif mode == settings.NETWORK_ENGINE_MODE.JOIN:
+            self.coro = self.loop.create_server(self.factory, self.ip, 80)
+        elif self.mode == settings.NETWORK_ENGINE_MODE.JOIN:
             self.factory = WebSocketClientFactory()
             self.factory.protocol = ConnectFourClientProtocol
 
-            self.loop = asyncio.get_event_loop()
-            self.coro = self.loop.create_connection(self.factory, '127.0.0.1', 80)
-            self.connection = self.loop.run_until_complete(self.coro)
-            self.loop.run_forever()
+            self.coro = self.loop.create_connection(self.factory, self.ip, 80)
+
+        self.connection = self.loop.run_until_complete(self.coro)
+        self.loop.run_forever()
 
     def stop(self):
         self.connection.close()
@@ -57,10 +59,10 @@ class ConnectFourServerProtocol(WebSocketServerProtocol):
         logging.info('WebSocket connection open')
 
     def onConnect(self, request):
-        logging.info('Client connecting: {}'.format(request.peer))
+        logging.info('Client connected: {}'.format(request.peer))
 
     def onClose(self, wasClean, code, reason):
-        logging.info('WebSocket connection closed: {}'.format(reason))
+        logging.info('Client quits: {}'.format(reason))
 
     def onMessage(self, payload, isBinary):
         payload = json.loads(payload.decode('utf8'))
@@ -79,6 +81,8 @@ class ConnectFourClientProtocol(WebSocketClientProtocol):
 
     def onConnect(self, request):
         logging.info('Connected to server: {}'.format(request.peer))
+
+        self.sendMessage({'coucou': True}, False)
 
     def onMessage(self, payload, isBinary):
         payload = json.loads(payload.decode('utf8'))
