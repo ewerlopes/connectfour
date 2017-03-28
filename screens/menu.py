@@ -84,7 +84,7 @@ class Menu:
             y=180,
             text='Host an online game',
             on_click=self.btn_host_online_game_click,
-            disabled=True
+            disabled=not self.app.dev_mode
         ))
 
         # Join an online game button
@@ -92,7 +92,7 @@ class Menu:
             y=230,
             text='Join an online game',
             on_click=self.btn_join_online_game_click,
-            disabled=True
+            disabled=not self.app.dev_mode
         ))
 
         # Host a LAN game button
@@ -100,7 +100,7 @@ class Menu:
             y=290,
             text='Host a LAN game',
             on_click=self.btn_host_lan_game_click,
-            disabled=True
+            disabled=not self.app.dev_mode
         ))
 
         # Join a LAN game button
@@ -108,7 +108,7 @@ class Menu:
             y=340,
             text='Join a LAN game',
             on_click=self.btn_join_lan_game_click,
-            disabled=True
+            disabled=not self.app.dev_mode
         ))
 
         # Quit button

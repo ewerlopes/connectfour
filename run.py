@@ -3,27 +3,42 @@ import pygame
 import logging
 import sys
 import os
+import click
 
-os.environ['SDL_VIDEO_CENTERED'] = '1' # This makes the window centered on the screen
 
-logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%d/%m/%Y %H:%M:%S',
-    stream=sys.stdout
-)
+@click.command()
+@click.option('--muted', is_flag=True, default=False, help='No sounds')
+@click.option('--dev', is_flag=True, default=False, help='Dev mode')
+def run(muted, dev):
+    os.environ['SDL_VIDEO_CENTERED'] = '1' # This makes the window centered on the screen
 
-logging.getLogger().setLevel(logging.INFO)
+    logging.basicConfig(
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%d/%m/%Y %H:%M:%S',
+        stream=sys.stdout
+    )
 
-logging.info('Initializing PyGame/{} (with SDL/{})'.format(
-    pygame.version.ver,
-    '.'.join(str(v) for v in pygame.get_sdl_version())
-))
+    logging.getLogger().setLevel(logging.DEBUG if dev else logging.WARNING)
 
-pygame.init()
+    logging.info('Initializing PyGame/{} (with SDL/{})'.format(
+        pygame.version.ver,
+        '.'.join(str(v) for v in pygame.get_sdl_version())
+    ))
 
-app = App()
+    pygame.init()
 
-logging.info('Running game')
+    if dev:
+        logging.info('Dev mode enabled')
 
-while True:
-    app.update()
+    if muted:
+        logging.info('Running with no sounds')
+
+    app = App(dev_mode=dev, no_sounds=muted)
+
+    logging.info('Running game')
+
+    while True:
+        app.update()
+
+if __name__ == '__main__':
+    run()

@@ -56,7 +56,7 @@ Just run the executable.
 **If you are a developer:**
 
 ```
-python run.py
+python run.py [--muted] [--dev]
 ```
 
 ## Controls

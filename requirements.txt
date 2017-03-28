@@ -2,3 +2,4 @@ pygame
 PyInstaller
 requests
 autobahn
+click
