@@ -41,7 +41,7 @@ def event_handler(gui_container, event):
                     current_theme.click_sound.stop()
                     current_theme.click_sound.play()
 
-                widget.on_click()
+                widget.on_click(widget)
             elif not widget.is_disabled and event.type == pygame.MOUSEMOTION:
                 if not widget.is_hovered and widget.rect.collidepoint(event.pos):
                     if current_theme.hover_sound:
@@ -60,17 +60,18 @@ def event_handler(gui_container, event):
                     current_theme.click_sound.stop()
                     current_theme.click_sound.play()
 
-                widget.on_click()
+                widget.on_click(widget)
 
 
 class Widget(pygame.sprite.Sprite):
     is_hovered = False
     is_disabled = False
 
-    def __init__(self, disabled=False):
+    def __init__(self, disabled=False, data={}):
         pygame.sprite.Sprite.__init__(self)
 
         self.is_disabled = disabled
+        self.data = data
 
     def draw(self):
         pass
@@ -112,8 +113,8 @@ class Widget(pygame.sprite.Sprite):
 class Label(Widget):
     on_click = None
 
-    def __init__(self, font, text, on_click=None):
-        Widget.__init__(self)
+    def __init__(self, font, text, on_click=None, data={}):
+        Widget.__init__(self, data=data)
 
         self.font = font
         self.text = text
@@ -125,14 +126,14 @@ class Label(Widget):
         global current_theme
 
         self.image = self.font.render(self.text, True, self.get_text_color())
-        self.rect = txt.get_rect()
+        self.rect = self.image.get_rect()
 
 
 class Button(Widget):
     on_click = None
 
-    def __init__(self, rect, font, text, on_click=None, disabled=False):
-        Widget.__init__(self, disabled=disabled)
+    def __init__(self, rect, font, text, on_click=None, disabled=False, data={}):
+        Widget.__init__(self, disabled=disabled, data=data)
 
         self.image = pygame.Surface(rect.size)
         self.rect = rect

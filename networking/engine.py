@@ -27,6 +27,9 @@ class Engine(StoppableThread):
         self.ip = ip
         self.daemon = True
         self.name = str(mode)
+
+        logging.info('Running network engine on {}'.format(ip))
+
         self.start()
 
     def run(self):

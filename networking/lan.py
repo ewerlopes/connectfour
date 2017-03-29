@@ -65,9 +65,10 @@ class Announcer(LanGame):
 
 
 class Discoverer(LanGame):
-    def __init__(self, app, games_list):
+    def __init__(self, lobby, games_list):
         logging.info('Running Discoverer thread')
-        self.app = app
+
+        self.lobby = lobby
         self.games_list = games_list
 
         super(Discoverer, self).__init__()
@@ -106,4 +107,4 @@ class Discoverer(LanGame):
                     'last_ping_at': time.time()
                 }
 
-                self.app.update_games_list_gui()
+                self.lobby.update_games_list_gui()

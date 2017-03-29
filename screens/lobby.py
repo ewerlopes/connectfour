@@ -38,12 +38,13 @@ class Lobby:
         elif self.lobby_type == settings.LOBBY_STATES.HOST_LAN_GAME:
             self.lan_announcer = networking.lan.Announcer()
 
-            # networking.engine.Engine(settings.NETWORK_ENGINE_MODE.HOST, '127.0.0.1')
+            networking.engine.Engine(settings.NETWORK_ENGINE_MODE.HOST, socket.gethostbyname(socket.gethostname()))
         elif self.lobby_type == settings.LOBBY_STATES.JOIN_LAN_GAME:
-            self.lan_discoverer = networking.lan.Discoverer(self.app, self.games_list)
+            self.lan_discoverer = networking.lan.Discoverer(self, self.games_list)
             pygame.time.set_timer(settings.EVENTS.CLEAN_LAN_GAMES.value, 3000)
 
-            # networking.engine.Engine(settings.NETWORK_ENGINE_MODE.JOIN, '127.0.0.1')
+    def on_server_click(self, widget):
+        networking.engine.Engine(settings.NETWORK_ENGINE_MODE.JOIN, widget.data['ip'])
 
     def update_games_list_gui(self):
         self.gui_container.empty()
@@ -51,30 +52,29 @@ class Lobby:
         y = 50
 
         for ip, infos in self.games_list.items():
-            game_name = self.normal_font.render(infos['name'], True, settings.COLORS.BLACK.value)
-            game_name_rect = game_name.get_rect()
-            game_name_rect.left = 10
-            game_name_rect.top = y
-
-            self.app.window.blit(game_name, game_name_rect)
-
-            game_ip = self.normal_font.render('{} ({})'.format(ip, infos['country'] if infos['country'] else 'Unknown location'), True, settings.COLORS.BLACK.value)
-            game_ip_rect = game_ip.get_rect()
-            game_ip_rect.right = settings.WINDOW_SIZE[0] - 10
-            game_ip_rect.top = y
-
-            self.app.window.blit(game_ip, game_ip_rect)
-
-            rect = pygame.Rect(0, y, 200, 40)
-            rect.centerx = self.app.window.get_rect().centerx
-
-            self.gui_container.add(gui.Label(
-                rect=rect,
+            game_name_label = gui.Label(
                 font=self.normal_font,
-                text=text,
-                on_click=on_click,
-                disabled=disabled
-            ))
+                text=infos['name'],
+                on_click=self.on_server_click,
+                data={'ip': ip, **infos}
+            )
+
+            game_name_label.rect.left = 10
+            game_name_label.rect.top = y
+
+            self.gui_container.add(game_name_label)
+
+            game_ip_label = gui.Label(
+                font=self.normal_font,
+                text='{}{}'.format(ip, ' (' + infos['country'] + ')' if 'country' in infos and infos['country'] else ''),
+                on_click=self.on_server_click,
+                data={'ip': ip, **infos}
+            )
+
+            game_ip_label.rect.right = settings.WINDOW_SIZE[0] - 10
+            game_ip_label.rect.top = y
+
+            self.gui_container.add(game_ip_label)
 
             y += 50
 
@@ -106,7 +106,7 @@ class Lobby:
             logging.info('Creating a new online game')
 
             try:
-                self.app.current_online_game = self.app.master_server_client.create_game(socket.getfqdn(), settings.VERSION)
+                self.app.current_online_game = self.app.master_server_client.create_game(socket.gethostname(), settings.VERSION)
 
                 # TODO Start a looping thread that POST to /games/{id} every 3 minutes without any parameter (to update the last_ping_at attribute)
             except Exception as e:

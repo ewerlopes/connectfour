@@ -38,32 +38,32 @@ class Menu:
             disabled=disabled
         )
 
-    def btn_offline_game_click(self):
+    def btn_offline_game_click(self, widget):
         logging.info('Offline game button clicked')
 
         self.app.set_current_screen(game.Game)
 
-    def btn_host_online_game_click(self):
+    def btn_host_online_game_click(self, widget):
         logging.info('Host an online game button clicked')
 
         self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.HOST_ONLINE_GAME)
 
-    def btn_join_online_game_click(self):
+    def btn_join_online_game_click(self, widget):
         logging.info('Join an online game button clicked')
 
         self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_ONLINE_GAME)
 
-    def btn_host_lan_game_click(self):
+    def btn_host_lan_game_click(self, widget):
         logging.info('Host a LAN game button clicked')
 
         self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.HOST_LAN_GAME)
 
-    def btn_join_lan_game_click(self):
+    def btn_join_lan_game_click(self, widget):
         logging.info('Join a LAN game button clicked')
 
         self.app.set_current_screen(lobby.Lobby, settings.LOBBY_STATES.JOIN_LAN_GAME)
 
-    def btn_quit_click(self):
+    def btn_quit_click(self, widget):
         pygame.quit()
         sys.exit()
 
