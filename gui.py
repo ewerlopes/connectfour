@@ -61,6 +61,15 @@ def event_handler(gui_container, event):
                     current_theme.click_sound.play()
 
                 widget.on_click(widget)
+            elif widget.on_click and not widget.is_disabled and event.type == pygame.MOUSEMOTION:
+                if not widget.is_hovered and widget.rect.collidepoint(event.pos):
+                    widget.is_hovered = True
+
+                    pygame.mouse.set_cursor(*widget.get_pointer())
+                elif widget.is_hovered and not widget.rect.collidepoint(event.pos):
+                    widget.is_hovered = False
+
+                    pygame.mouse.set_cursor(*widget.get_pointer())
 
 
 class Widget(pygame.sprite.Sprite):
@@ -122,11 +131,12 @@ class Label(Widget):
 
         self.draw()
 
+        self.rect = self.image.get_rect()
+
     def draw(self):
         global current_theme
 
         self.image = self.font.render(self.text, True, self.get_text_color())
-        self.rect = self.image.get_rect()
 
 
 class Button(Widget):
