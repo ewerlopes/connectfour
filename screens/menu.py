@@ -18,6 +18,7 @@ class Menu:
 
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
+        self.small_font = utils.load_font('monofur.ttf', 11)
 
         self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
 
@@ -132,6 +133,21 @@ class Menu:
 
         self.app.window.blit(version, version_rect)
 
+    def draw_footer(self):
+        footer1 = self.small_font.render('Connect Four™ is a trademark of Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
+        footer1_rect = footer1.get_rect()
+        footer1_rect.centerx = self.app.window.get_rect().centerx
+        footer1_rect.bottom = self.app.window.get_rect().h - 12
+
+        self.app.window.blit(footer1, footer1_rect)
+
+        footer2 = self.small_font.render('This project isn\'t supported nor endorsed by Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
+        footer2_rect = footer2.get_rect()
+        footer2_rect.centerx = self.app.window.get_rect().centerx
+        footer2_rect.bottom = self.app.window.get_rect().h - 2
+
+        self.app.window.blit(footer2, footer2_rect)
+
     def update(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
@@ -143,6 +159,7 @@ class Menu:
         self.app.window.fill(settings.COLORS.WHITE.value)
 
         self.draw_title()
+        self.draw_footer()
 
         self.gui_container.update()
         self.gui_container.draw(self.app.window)
