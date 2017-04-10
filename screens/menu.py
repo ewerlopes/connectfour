@@ -18,7 +18,7 @@ class Menu:
 
         self.title_font = utils.load_font('monofur.ttf', 62)
         self.normal_font = utils.load_font('monofur.ttf', 18)
-        self.small_font = utils.load_font('monofur.ttf', 11)
+        self.small_font = utils.load_font('monofur.ttf', 15)
 
         self.musics_volume = self.app.config.getfloat('connectfour', 'music_volume')
 
@@ -75,14 +75,14 @@ class Menu:
 
         # Offline game button
         self.gui_container.add(self.create_menu_button(
-            y=120,
+            y=150,
             text='Offline game',
             on_click=self.btn_offline_game_click
         ))
 
         # Host an online game button
         self.gui_container.add(self.create_menu_button(
-            y=180,
+            y=210,
             text='Host an online game',
             on_click=self.btn_host_online_game_click,
             disabled=not self.app.dev_mode
@@ -90,7 +90,7 @@ class Menu:
 
         # Join an online game button
         self.gui_container.add(self.create_menu_button(
-            y=230,
+            y=260,
             text='Join an online game',
             on_click=self.btn_join_online_game_click,
             disabled=not self.app.dev_mode
@@ -98,7 +98,7 @@ class Menu:
 
         # Host a LAN game button
         self.gui_container.add(self.create_menu_button(
-            y=290,
+            y=320,
             text='Host a LAN game',
             on_click=self.btn_host_lan_game_click,
             disabled=not self.app.dev_mode
@@ -106,7 +106,7 @@ class Menu:
 
         # Join a LAN game button
         self.gui_container.add(self.create_menu_button(
-            y=340,
+            y=370,
             text='Join a LAN game',
             on_click=self.btn_join_lan_game_click,
             disabled=not self.app.dev_mode
@@ -114,7 +114,7 @@ class Menu:
 
         # Quit button
         self.gui_container.add(self.create_menu_button(
-            y=400,
+            y=430,
             text='Quit',
             on_click=self.btn_quit_click
         ))
@@ -137,14 +137,14 @@ class Menu:
         footer1 = self.small_font.render('Connect Four™ is a trademark of Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
         footer1_rect = footer1.get_rect()
         footer1_rect.centerx = self.app.window.get_rect().centerx
-        footer1_rect.bottom = self.app.window.get_rect().h - 12
+        footer1_rect.bottom = self.app.window.get_rect().h - 20
 
         self.app.window.blit(footer1, footer1_rect)
 
         footer2 = self.small_font.render('This project isn\'t supported nor endorsed by Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
         footer2_rect = footer2.get_rect()
         footer2_rect.centerx = self.app.window.get_rect().centerx
-        footer2_rect.bottom = self.app.window.get_rect().h - 2
+        footer2_rect.bottom = self.app.window.get_rect().h - 5
 
         self.app.window.blit(footer2, footer2_rect)
 
