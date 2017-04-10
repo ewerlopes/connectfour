@@ -25,6 +25,7 @@ class RedPlayer:
         self.color = settings.COLORS.RED.value
         self.name = 'Red'
         self.id = 'RED'
+        self.score = 0
 
 
 class YellowPlayer:
@@ -33,3 +34,4 @@ class YellowPlayer:
         self.color = settings.COLORS.YELLOW.value
         self.name = 'Yellow'
         self.id = 'YELLOW'
+        self.score = 0

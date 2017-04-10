@@ -70,22 +70,6 @@ class Game:
 
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
 
-    def draw_game_name(self):
-        text = self.normal_font.render('Connect Four v' + settings.VERSION, True, settings.COLORS.WHITE.value)
-        text_rect = text.get_rect()
-        text_rect.centery = 25
-        text_rect.right = self.app.window.get_rect().width - 10
-
-        self.app.window.blit(text, text_rect)
-
-    def draw_status(self, text, color):
-        text = self.title_font.render(text, True, color)
-        text_rect = text.get_rect()
-        text_rect.x = 10
-        text_rect.centery = 25
-
-        self.app.window.blit(text, text_rect)
-
     def is_valid_position(self, x, y):
         if x < 0 or x > settings.COLS - 1 or y < 0 or y > settings.ROWS - 1:
             return False
@@ -269,9 +253,51 @@ class Game:
         self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_1)
         self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_2)
 
+    def draw_header(self, status_text, status_color):
+        # Status
+        status = self.title_font.render(status_text, True, status_color)
+        status_rect = status.get_rect()
+        status_rect.x = 10
+        status_rect.centery = 25
+
+        self.app.window.blit(status, status_rect)
+
+        # Game name
+        game_name = self.normal_font.render('Connect Four v' + settings.VERSION, True, settings.COLORS.WHITE.value)
+        game_name_rect = game_name.get_rect()
+        game_name_rect.centery = 25
+        game_name_rect.right = self.app.window.get_rect().width - 10
+
+        self.app.window.blit(game_name, game_name_rect)
+
+        # Scores
+        pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (game_name_rect.left - 15, 0), (game_name_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+
+        scores_yellow = self.title_font.render(str(self.yellow_player.score), True, settings.COLORS.YELLOW.value)
+        scores_yellow_rect = scores_yellow.get_rect()
+        scores_yellow_rect.centery = 25
+        scores_yellow_rect.right = game_name_rect.left - 25
+
+        self.app.window.blit(scores_yellow, scores_yellow_rect)
+
+        dash = self.title_font.render('-', True, settings.COLORS.WHITE.value)
+        dash_rect = dash.get_rect()
+        dash_rect.centery = 25
+        dash_rect.right = scores_yellow_rect.left - 5
+
+        self.app.window.blit(dash, dash_rect)
+
+        scores_red = self.title_font.render(str(self.red_player.score), True, settings.COLORS.RED.value)
+        scores_red_rect = scores_red.get_rect()
+        scores_red_rect.centery = 25
+        scores_red_rect.right = dash_rect.left - 5
+
+        self.app.window.blit(scores_red, scores_red_rect)
+
+        pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
+
     def update(self):
         self.draw_background()
-        self.draw_game_name()
 
         if self.state == settings.GAME_STATES.PLAYING:
             if not self.current_player_chip:
@@ -324,6 +350,7 @@ class Game:
                                 self.state = settings.GAME_STATES.WON
                                 pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
                                 logging.info(self.current_player.name + ' win')
+                                self.current_player.score += 1
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
@@ -339,7 +366,8 @@ class Game:
                             self.column_full_sound.play()
                             logging.info('{} column full'.format(self.current_player_chip_column))
 
-            self.draw_status(self.current_player.name + ' player turn', self.current_player.color)
+            status_text = self.current_player.name + ' player turn'
+            status_color = self.current_player.color
         elif self.state == settings.GAME_STATES.WON:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -359,7 +387,8 @@ class Game:
 
                     pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
-            self.draw_status(self.current_player.name + ' player win!', settings.COLORS.WHITE.value)
+            status_text = self.current_player.name + ' player win!'
+            status_color = self.current_player.color
         elif self.state == settings.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -372,7 +401,9 @@ class Game:
                     elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.init_new_game()
 
-            self.draw_status('Shame, no one win.', settings.COLORS.WHITE.value)
+            status_text = 'Shame, no one win.'
+            status_color = settings.COLORS.WHITE.value
 
+        self.draw_header(status_text, status_color)
         self.chips.draw(self.app.window)
         self.draw_board()
