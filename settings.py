@@ -5,7 +5,7 @@ import os
 import gui
 import utils
 
-VERSION = '1.0'
+VERSION = '1.2'
 FPS = 30
 IMAGES_SIDE_SIZE = 80
 COLS = 7
