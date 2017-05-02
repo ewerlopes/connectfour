@@ -61,9 +61,10 @@ python run.py [--muted] [--dev]
 
 ## Controls
 
-  - <kbd>ESC</kbd> quits to the menu or close the game
+  - <kbd>ESC</kbd> quits to the menu or close the game when already on the menu
   - <kbd>←</kbd> and <kbd>→</kbd> moves the chip respectively to the left and to the right
   - <kbd>↓</kbd> drops the chip in the selected column
+  - <kbd>↵</kbd> starts a new game when one is finished
 
 ## How it works
 
