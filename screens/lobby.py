@@ -1,6 +1,6 @@
-from screens import menu
-import networking.lan
-import networking.engine
+#from screens import menu
+#import networking.lan
+#import networking.engine
 import pygame
 import logging
 import settings
@@ -10,7 +10,13 @@ import socket
 import gui
 import time
 
-
+#To make it work on python 2.7
+def merge_two_dicts(x, y):
+    """Given two dicts, merge them into a new dict as a shallow copy."""
+    z = x.copy()
+    z.update(y)
+    return z
+    
 class Lobby:
     def __init__(self, app, lobby_type):
         logging.info('Initializing lobby')
@@ -56,7 +62,8 @@ class Lobby:
                 font=self.normal_font,
                 text=infos['name'],
                 on_click=self.on_server_click,
-                data={'ip': ip, **infos}
+                data=merge_two_dicts({'ip': ip},infos)
+                #data = {{'ip': ip},**infos}
             )
 
             game_name_label.rect.left = 10
@@ -68,7 +75,8 @@ class Lobby:
                 font=self.normal_font,
                 text='{}{}'.format(ip, ' (' + infos['country'] + ')' if 'country' in infos and infos['country'] else ''),
                 on_click=self.on_server_click,
-                data={'ip': ip, **infos}
+                data=merge_two_dicts({'ip' : ip},infos)
+                #data = {{'ip': ip},**infos}
             )
 
             game_ip_label.rect.right = settings.WINDOW_SIZE[0] - 10

@@ -1,4 +1,4 @@
-from screens import menu
+#from screens import menu
 from collections import deque
 import objects
 import pygame
@@ -14,10 +14,13 @@ class Game:
 
         self.app = app
 
+        # the array of chips already placed on the game
         self.chips = pygame.sprite.Group()
         self.current_consecutive_chips = deque(maxlen=4)
+
         self.red_player = objects.RedPlayer()
-        self.yellow_player = objects.YellowPlayer()
+        # AI
+        self.yellow_player = objects.AIPlayer()
 
         logging.info('Loading images')
 
@@ -296,6 +299,20 @@ class Game:
 
         pygame.draw.line(self.app.window, settings.COLORS.BLACK.value, (scores_red_rect.left - 15, 0), (scores_red_rect.left - 15, settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
 
+    def print_board(self):
+        """
+        Print board to console
+        :return:
+        """
+        board_mat = [['0' for x in range(7)] for y in range(6)]
+        for row in self.board.keys():
+            l_row = []
+            for col,v in self.board[row].iteritems():
+                if v is not None:
+                    board_mat[col][row] = v[0]
+        for row in range(len(board_mat)):
+             logging.info(str(board_mat[row]))
+
     def update(self):
         self.draw_background()
 
@@ -306,6 +323,10 @@ class Game:
                 self.chips.add(self.current_player_chip)
                 self.current_player_chip.rect.left = 0
                 self.current_player_chip.rect.top = settings.COLUMN_CHOOSING_MARGIN_TOP
+
+            ## If there is AI, call its get_move method.
+            if self.current_player.name == 'AI':
+                self.current_player.move()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -340,6 +361,8 @@ class Game:
                         if chip_row_stop is not False: # Actually move the chip in the current column and reset the current one (to create a new one later)
                             self.placed_sound.play()
                             self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
+                            logging.info("--- Board setup:")
+                            self.print_board()
                             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
                             if self.did_i_win():

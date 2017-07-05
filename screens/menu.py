@@ -134,7 +134,7 @@ class Menu:
         self.app.window.blit(version, version_rect)
 
     def draw_footer(self):
-        footer1 = self.small_font.render('Connect Four™ is a trademark of Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
+        footer1 = self.small_font.render('Connect Four is a trademark of Milton Bradley / Hasbro', True, settings.COLORS.BLACK.value)
         footer1_rect = footer1.get_rect()
         footer1_rect.centerx = self.app.window.get_rect().centerx
         footer1_rect.bottom = self.app.window.get_rect().h - 20
