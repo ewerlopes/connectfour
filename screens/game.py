@@ -1,11 +1,13 @@
 #from screens import menu
 from collections import deque
+from ai import adversarial_search, utils, heuristic
 import objects
 import pygame
 import settings
 import utils
 import logging
 import sys
+import json
 
 
 class Game:
@@ -49,7 +51,7 @@ class Game:
     def init_new_game(self):
         logging.info('Starting new game')
 
-        self.state = settings.GAME_STATES.PLAYING
+        self.program_state = settings.GAME_STATES.PLAYING
 
         self.chips.empty()
         self.current_consecutive_chips.clear()
@@ -60,6 +62,9 @@ class Game:
 
         self.board = {}
         self.highlighted_chips = {}
+
+        self.game_problem = adversarial_search.ConnectFour()
+        self.game_state = self.game_problem.initial # the game state (used for reasoning).
 
         for x in range(0, settings.COLS):
             self.board[x] = {}
@@ -313,10 +318,31 @@ class Game:
         for row in range(len(board_mat)):
              logging.info(str(board_mat[row]))
 
+    def convert_board_to_ai(self):
+        """
+        Converts the self.board into the desired format for the ai reasoning.
+        :return: the board in the form of a dict of {(x, y): Player} entries,
+        where Player is 'R' or 'Y', standing for 'Red' and 'Yellow' chips,
+        respectively.
+            The coordinates look as follows:
+                0         x
+                |------------->
+                |
+                |
+                |
+             y  v
+        """
+        converted_dict = {}
+        for row in self.board.keys():
+            for col, v in self.board[row].iteritems():
+                if v is not None:
+                    converted_dict[(row, col)] = v[0]
+        return converted_dict
+
     def update(self):
         self.draw_background()
 
-        if self.state == settings.GAME_STATES.PLAYING:
+        if self.program_state == settings.GAME_STATES.PLAYING:
             if not self.current_player_chip:
                 self.current_player_chip = self.current_player.chip()
 
@@ -324,9 +350,17 @@ class Game:
                 self.current_player_chip.rect.left = 0
                 self.current_player_chip.rect.top = settings.COLUMN_CHOOSING_MARGIN_TOP
 
+
+
             ## If there is AI, call its get_move method.
-            if self.current_player.name == 'AI':
-                self.current_player.move()
+            if self.current_player.id == 'AI':
+                self.game_state, move = self.current_player.move(self.game_state, self.game_problem)
+                plan = []
+                for i in range(move[0]):
+                    plan.append(pygame.K_RIGHT)
+                plan.append(pygame.K_DOWN)
+                [pygame.event.post(pygame.event.Event(pygame.KEYDOWN, {"key": x})) for x in plan]
+                logging.info(move)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -361,8 +395,14 @@ class Game:
                         if chip_row_stop is not False: # Actually move the chip in the current column and reset the current one (to create a new one later)
                             self.placed_sound.play()
                             self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
+                            self.game_state = self.game_problem.make_move((self.current_player_chip_column,chip_row_stop),
+                                                                          self.game_state)
+
+                            logging.info(self.game_state)
                             logging.info("--- Board setup:")
+                            print json.dumps(self.board, indent=4)
                             self.print_board()
+                            print self.convert_board_to_ai()
                             self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
                             if self.did_i_win():
@@ -370,14 +410,14 @@ class Game:
                                 pygame.mixer.music.stop()
                                 self.win_sound.play()
                                 self.applause_sound.play()
-                                self.state = settings.GAME_STATES.WON
+                                self.program_state = settings.GAME_STATES.WON
                                 pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
                                 logging.info(self.current_player.name + ' win')
                                 self.current_player.score += 1
                             elif self.did_no_one_win():
                                 pygame.mixer.music.stop()
                                 self.boo_sound.play()
-                                self.state = settings.GAME_STATES.NO_ONE_WIN
+                                self.program_state = settings.GAME_STATES.NO_ONE_WIN
                                 logging.info('No one won')
                             else: # It's the other player's turn if the current player didn't win
                                 self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
@@ -391,7 +431,7 @@ class Game:
 
             status_text = self.current_player.name + ' player turn'
             status_color = self.current_player.color
-        elif self.state == settings.GAME_STATES.WON:
+        elif self.program_state == settings.GAME_STATES.WON:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -412,7 +452,7 @@ class Game:
 
             status_text = self.current_player.name + ' player win!'
             status_color = self.current_player.color
-        elif self.state == settings.GAME_STATES.NO_ONE_WIN:
+        elif self.program_state == settings.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -424,7 +464,7 @@ class Game:
                     elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.init_new_game()
 
-            status_text = 'Shame, no one win.'
+            status_text = 'TIE!'
             status_color = settings.COLORS.WHITE.value
 
         self.draw_header(status_text, status_color)
