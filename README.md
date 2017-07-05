@@ -1,10 +1,7 @@
 # Connect Four
+<img src="resources/images/icon_github.png" align="right" />
 
 The [Connect Four](https://en.wikipedia.org/wiki/Connect_Four) game, implemented in Python.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/EpocDotFr/connectfour/master/screenshot.png">
-</p>
 
 ## Features
 

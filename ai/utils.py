@@ -2,6 +2,7 @@
 """
 
 from __future__ import generators
+from abc import ABCMeta, abstractmethod
 import operator, math, random, copy, sys, os.path, bisect
 
 # ______________________________________________________________________________
@@ -248,8 +249,10 @@ class DefaultDict(dict):
 
 
 class Struct:
-    """Create an instance with argument=value slots.
-    This is for making a lightweight object whose class doesn't matter."""
+    """
+    Create an instance with argument=value slots.
+    This is for making a lightweight object whose class doesn't matter.
+    """
 
     def __init__(self, **entries):
         self.__dict__.update(entries)
@@ -722,8 +725,10 @@ class Queue:
     Note that isinstance(Stack(), Queue) is false, because we implement stacks
     as lists.  If Python ever gets interfaces, Queue will be an interface."""
 
+    __metaclass__ = ABCMeta
+
     def __init__(self):
-        abstract
+        pass
 
     def extend(self, items):
         for item in items: self.append(item)
@@ -778,8 +783,3 @@ class PriorityQueue(Queue):
             return self.A.pop(0)[1]
         else:
             return self.A.pop()[1]
-
-
-## Fig: The idea is we can define things like Fig[3,10] later.
-## Alas, it is Fig[3,10] not Fig[3.10], because that would be the same as Fig[3.1]
-Fig = {}
