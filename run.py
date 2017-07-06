@@ -1,9 +1,11 @@
-from app import App
-import pygame
 import logging
-import sys
 import os
+import sys
+
 import click
+import pygame
+
+from engine.game.app import App
 
 
 @click.command()

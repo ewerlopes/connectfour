@@ -1,11 +1,10 @@
-from configparser import ConfigParser
-from screens import menu
-from networking.online import CFMSClient
-import pygame
-import settings
-import utils
 import logging
 import os
+
+import pygame
+from configparser import ConfigParser
+
+from engine.game import game, utils, settings
 
 
 class App:
@@ -22,10 +21,7 @@ class App:
         pygame.display.set_icon(utils.load_image('icon.png'))
 
         self.load_config()
-
-        self.master_server_client = CFMSClient(self.config.get('connectfour', 'master_server_endpoint'))
-
-        self.set_current_screen(menu.Menu)
+        self.set_current_screen(game.Game)
 
     def load_config(self):
         logging.info('Loading configuration')
@@ -46,12 +42,9 @@ class App:
 
     def set_current_screen(self, Screen, *args):
         logging.info('Setting current screen to {}'.format(Screen))
-
         if hasattr(self, 'current_screen') and self.current_screen:
             del self.current_screen
-
         pygame.mouse.set_cursor(*pygame.cursors.arrow)
-
         self.current_screen = Screen(self, *args)
 
     def update(self):

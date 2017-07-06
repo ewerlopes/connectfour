@@ -1,11 +1,14 @@
 #from screens import menu
-from collections import deque
-import objects
-import pygame
-import settings
-import utils
 import logging
 import sys
+from collections import deque
+
+import pygame
+
+import objects
+import settings
+import utils
+
 
 class Game:
     def __init__(self, app):
@@ -252,7 +255,8 @@ class Game:
         self.app.window.fill(settings.COLORS.BLACK.value)
 
         blue_rect_1 = pygame.Rect((0, 0), (settings.WINDOW_SIZE[0], settings.COLUMN_CHOOSING_MARGIN_TOP - 1))
-        blue_rect_2 = pygame.Rect((0, settings.COLUMN_CHOOSING_MARGIN_TOP), (settings.WINDOW_SIZE[0], settings.IMAGES_SIDE_SIZE))
+        blue_rect_2 = pygame.Rect((0, settings.COLUMN_CHOOSING_MARGIN_TOP), (
+        settings.WINDOW_SIZE[0], settings.IMAGES_SIDE_SIZE))
 
         self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_1)
         self.app.window.fill(settings.COLORS.BLUE.value, blue_rect_2)
@@ -423,7 +427,7 @@ class Game:
                     #self.column_change_sound.play()
                     mousex, mousey = pygame.mouse.get_pos()
                     col_clicked = (mousex / settings.IMAGES_SIDE_SIZE) \
-                                                      % settings.COLS
+                                  % settings.COLS
                     if (col_clicked >= 0) and (col_clicked < settings.COLS):
                         self.current_player_chip_column = col_clicked
                         self.current_player_chip.rect.right = settings.IMAGES_SIDE_SIZE * \

@@ -1,6 +1,8 @@
-from random import choice
-import pygame
 import os
+from random import choice
+
+import pygame
+
 import settings
 
 

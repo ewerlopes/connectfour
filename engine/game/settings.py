@@ -1,9 +1,11 @@
-from enum import Enum
-import pygame
-import sys
 import os
+import sys
+from enum import Enum
+
+import pygame
+
 import gui
-import utils
+from engine.game import utils
 
 VERSION = '1.2'
 FPS = 30

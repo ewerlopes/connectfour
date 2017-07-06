@@ -1,7 +1,9 @@
-import pygame
-import utils
-import settings
 from abc import ABCMeta, abstractmethod
+
+import pygame
+
+import settings
+import utils
 
 """
 This class has classes for the game objects: Chips and Players.
@@ -44,7 +46,7 @@ class Player:
 
 class RedPlayer(Player):
     def __init__(self):
-        Player.__init__(self,RedChip,settings.COLORS.RED.value,'Red','RED',0)
+        Player.__init__(self, RedChip, settings.COLORS.RED.value, 'Red', 'RED', 0)
 
     def move(self, state, game_problem):
         pass
