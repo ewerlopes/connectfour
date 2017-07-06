@@ -5,7 +5,7 @@ from enum import Enum
 import pygame
 
 import gui
-from engine.game import utils
+from c4.engine.game import utils
 
 VERSION = '1.2'
 FPS = 30
@@ -20,7 +20,7 @@ LAN_PORT = 2560
 LAN_TIMEOUT = 5
 
 # When frozen by PyInstaller, the path to the resources is different
-RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'resources'
+RESOURCES_ROOT = os.path.join(sys._MEIPASS, 'resources') if getattr(sys, 'frozen', False) else 'c4/engine/game/resources'
 
 CONFIG_FILE = 'connectfour.ini'
 DEFAULT_CONFIG = {

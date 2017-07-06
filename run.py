@@ -5,7 +5,7 @@ import sys
 import click
 import pygame
 
-from engine.game.app import App
+from c4.engine.game.app import App
 
 
 @click.command()

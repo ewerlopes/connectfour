@@ -4,7 +4,7 @@ import os
 import pygame
 from configparser import ConfigParser
 
-from engine.game import game, utils, settings
+from c4.engine.game import game, utils, settings
 
 
 class App:
