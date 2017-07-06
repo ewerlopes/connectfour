@@ -1,8 +1,6 @@
 import pygame
 import utils
 import settings
-from ai import heuristic
-from ai import adversarial_search
 from abc import ABCMeta, abstractmethod
 
 """
@@ -57,14 +55,3 @@ class YellowPlayer(Player):
 
     def move(self, state, game_problem):
         pass
-
-class AIPlayer(Player):
-    def __init__(self):
-        Player.__init__(self,YellowChip, settings.COLORS.YELLOW.value, 'Yellow', 'AI', 0)
-
-    def move(self,state, game):
-        move = adversarial_search.alphabeta_search(state, game,
-                                                   d=4,
-                                                   cutoff_test=None,
-                                                   eval_fn=heuristic.best_move_heuristic2)
-        return (game.make_move(move, state), move)

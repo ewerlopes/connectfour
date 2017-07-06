@@ -1,14 +1,11 @@
 #from screens import menu
 from collections import deque
-from ai import adversarial_search, utils, heuristic
 import objects
 import pygame
 import settings
 import utils
 import logging
 import sys
-import json
-
 
 class Game:
     def __init__(self, app):
@@ -21,8 +18,7 @@ class Game:
         self.current_consecutive_chips = deque(maxlen=4)
 
         self.red_player = objects.RedPlayer()
-        # AI
-        self.yellow_player = objects.AIPlayer()
+        self.yellow_player = objects.YellowPlayer()
 
         logging.info('Loading images')
 
@@ -63,8 +59,8 @@ class Game:
         self.board = {}
         self.highlighted_chips = {}
 
-        self.game_problem = adversarial_search.ConnectFour()
-        self.game_state = self.game_problem.initial # the game state (used for reasoning).
+        #self.game_problem = adversarial_search.ConnectFour()
+        #self.game_state = self.game_problem.initial # the game state (used for reasoning).
 
         for x in range(0, settings.COLS):
             self.board[x] = {}
@@ -374,8 +370,6 @@ class Game:
             if chip_row_stop is not False:  # Actually move the chip in the current column and reset the current one (to create a new one later)
                 self.placed_sound.play()
                 self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
-                self.game_state = self.game_problem.make_move((self.current_player_chip_column, chip_row_stop),
-                                                              self.game_state)
                 self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
 
                 if self.did_i_win():
@@ -407,6 +401,7 @@ class Game:
         self.draw_background()
 
         if self.program_state == settings.GAME_STATES.PLAYING:
+            
             if not self.current_player_chip:
                 self.current_player_chip = self.current_player.chip()
 
@@ -422,6 +417,18 @@ class Game:
                 self._move_chip_down()
                 logging.info('AI Move: ' + str(move))
             else:
+
+                # MOUSE INTERACTIVITY           
+                if self.current_player_chip:
+                    #self.column_change_sound.play()
+                    mousex, mousey = pygame.mouse.get_pos()
+                    col_clicked = (mousex / settings.IMAGES_SIDE_SIZE) \
+                                                      % settings.COLS
+                    if (col_clicked >= 0) and (col_clicked < settings.COLS):
+                        self.current_player_chip_column = col_clicked
+                        self.current_player_chip.rect.right = settings.IMAGES_SIDE_SIZE * \
+                                                              (self.current_player_chip_column+1) 
+                
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -430,14 +437,14 @@ class Game:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
                             self.app.set_current_screen(menu.Menu, True)
-                        elif event.key == pygame.K_LEFT and self.current_player_chip: # Move chip to the left
-                            self._move_chip_left()
-                        elif event.key == pygame.K_RIGHT and self.current_player_chip: # Move chip to the right
-                            self._move_chip_right()
-                        elif event.key == pygame.K_DOWN and self.current_player_chip: # Drop the chip in the current column
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        # pygame.mouse.get_pressed() returns a tupple 
+                        # (leftclick, middleclick, rightclick) Each one 
+                        # is a boolean integer representing button up/down.
+                        if pygame.mouse.get_pressed()[0]:
                             self._move_chip_down()
-
-            status_text = self.current_player.name + ' player turn'
+                            
+            status_text = self.current_player.name + " PLAYER'S TURN!"
             status_color = self.current_player.color
         elif self.program_state == settings.GAME_STATES.WON:
             for event in pygame.event.get():
@@ -458,7 +465,7 @@ class Game:
 
                     pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
-            status_text = self.current_player.name + ' player win!'
+            status_text = self.current_player.name + ' PLAYER WINS!'
             status_color = self.current_player.color
         elif self.program_state == settings.GAME_STATES.NO_ONE_WIN:
             for event in pygame.event.get():
