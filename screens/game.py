@@ -339,6 +339,70 @@ class Game:
                     converted_dict[(row, col)] = v[0]
         return converted_dict
 
+    def _move_chip_right(self):
+        """Move chip to the right on the screen"""
+        if self.program_state == settings.GAME_STATES.PLAYING and self.current_player_chip:
+            self.column_change_sound.play()
+
+            if self.current_player_chip.rect.right + settings.IMAGES_SIDE_SIZE <= settings.WINDOW_SIZE[
+                0]:  # The chip will not go beyond the screen
+                self.current_player_chip.rect.right += settings.IMAGES_SIDE_SIZE
+                self.current_player_chip_column += 1
+            else:  # The chip will go beyond the screen: put it in the far left
+                self.current_player_chip.rect.left = 0
+                self.current_player_chip_column = 0
+
+    def _move_chip_left(self):
+        """Move chip to the left on the screen"""
+        if self.program_state == settings.GAME_STATES.PLAYING and self.current_player_chip:
+            self.column_change_sound.play()
+
+            if self.current_player_chip.rect.left - settings.IMAGES_SIDE_SIZE >= 0:  # The chip will not go beyond the screen
+                self.current_player_chip.rect.left -= settings.IMAGES_SIDE_SIZE
+                self.current_player_chip_column -= 1
+            else:  # The chip will go beyond the screen: put it in the far right
+                self.current_player_chip.rect.right = settings.WINDOW_SIZE[0]
+                self.current_player_chip_column = settings.COLS - 1
+
+    def _move_chip_down(self):
+        """Move chip down on the screen (effectively perform player movement"""
+
+        if self.program_state == settings.GAME_STATES.PLAYING and self.current_player_chip:
+            # Check all rows in the currently selected column starting from the top
+            chip_row_stop = self.get_free_row(self.current_player_chip_column)
+
+            if chip_row_stop is not False:  # Actually move the chip in the current column and reset the current one (to create a new one later)
+                self.placed_sound.play()
+                self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
+                self.game_state = self.game_problem.make_move((self.current_player_chip_column, chip_row_stop),
+                                                              self.game_state)
+                self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
+
+                if self.did_i_win():
+                    self.set_highlighted_chips()
+                    pygame.mixer.music.stop()
+                    self.win_sound.play()
+                    self.applause_sound.play()
+                    self.program_state = settings.GAME_STATES.WON
+                    pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
+                    logging.info(self.current_player.name + ' win')
+                    self.current_player.score += 1
+                elif self.did_no_one_win():
+                    pygame.mixer.music.stop()
+                    self.boo_sound.play()
+                    self.program_state = settings.GAME_STATES.NO_ONE_WIN
+                    logging.info('No one won')
+                else:  # It's the other player's turn if the current player didn't win
+                    self.current_player = self.yellow_player if isinstance(self.current_player,
+                                                                           objects.RedPlayer) else self.red_player
+                    logging.info(self.current_player.name + ' player turn')
+
+                self.current_player_chip = None
+                self.current_player_chip_column = 0
+            else:  # The column is full
+                self.column_full_sound.play()
+                logging.info('{} column full'.format(self.current_player_chip_column))
+
     def update(self):
         self.draw_background()
 
@@ -350,84 +414,28 @@ class Game:
                 self.current_player_chip.rect.left = 0
                 self.current_player_chip.rect.top = settings.COLUMN_CHOOSING_MARGIN_TOP
 
-
-
-            ## If there is AI, call its get_move method.
+            # If there is AI, call its get_move method.
             if self.current_player.id == 'AI':
                 self.game_state, move = self.current_player.move(self.game_state, self.game_problem)
-                plan = []
                 for i in range(move[0]):
-                    plan.append(pygame.K_RIGHT)
-                plan.append(pygame.K_DOWN)
-                [pygame.event.post(pygame.event.Event(pygame.KEYDOWN, {"key": x})) for x in plan]
-                logging.info(move)
+                    self._move_chip_right()
+                self._move_chip_down()
+                logging.info('AI Move: ' + str(move))
+            else:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(menu.Menu, True)
-                    elif event.key == pygame.K_LEFT and self.current_player_chip: # Move chip to the left
-                        self.column_change_sound.play()
-
-                        if self.current_player_chip.rect.left - settings.IMAGES_SIDE_SIZE >= 0: # The chip will not go beyond the screen
-                            self.current_player_chip.rect.left -= settings.IMAGES_SIDE_SIZE
-                            self.current_player_chip_column -= 1
-                        else: # The chip will go beyond the screen: put it in the far right
-                            self.current_player_chip.rect.right = settings.WINDOW_SIZE[0]
-                            self.current_player_chip_column = settings.COLS - 1
-                    elif event.key == pygame.K_RIGHT and self.current_player_chip: # Move chip to the right
-                        self.column_change_sound.play()
-
-                        if self.current_player_chip.rect.right + settings.IMAGES_SIDE_SIZE <= settings.WINDOW_SIZE[0]: # The chip will not go beyond the screen
-                            self.current_player_chip.rect.right += settings.IMAGES_SIDE_SIZE
-                            self.current_player_chip_column += 1
-                        else: # The chip will go beyond the screen: put it in the far left
-                            self.current_player_chip.rect.left = 0
-                            self.current_player_chip_column = 0
-                    elif event.key == pygame.K_DOWN and self.current_player_chip: # Drop the chip in the current column
-                        # Check all rows in the currently selected column starting from the top
-                        chip_row_stop = self.get_free_row(self.current_player_chip_column)
-
-                        if chip_row_stop is not False: # Actually move the chip in the current column and reset the current one (to create a new one later)
-                            self.placed_sound.play()
-                            self.board[self.current_player_chip_column][chip_row_stop] = self.current_player.name
-                            self.game_state = self.game_problem.make_move((self.current_player_chip_column,chip_row_stop),
-                                                                          self.game_state)
-
-                            logging.info(self.game_state)
-                            logging.info("--- Board setup:")
-                            print json.dumps(self.board, indent=4)
-                            self.print_board()
-                            print self.convert_board_to_ai()
-                            self.current_player_chip.rect.top += settings.IMAGES_SIDE_SIZE * (chip_row_stop + 1)
-
-                            if self.did_i_win():
-                                self.set_highlighted_chips()
-                                pygame.mixer.music.stop()
-                                self.win_sound.play()
-                                self.applause_sound.play()
-                                self.program_state = settings.GAME_STATES.WON
-                                pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
-                                logging.info(self.current_player.name + ' win')
-                                self.current_player.score += 1
-                            elif self.did_no_one_win():
-                                pygame.mixer.music.stop()
-                                self.boo_sound.play()
-                                self.program_state = settings.GAME_STATES.NO_ONE_WIN
-                                logging.info('No one won')
-                            else: # It's the other player's turn if the current player didn't win
-                                self.current_player = self.yellow_player if isinstance(self.current_player, objects.RedPlayer) else self.red_player
-                                logging.info(self.current_player.name + ' player turn')
-
-                            self.current_player_chip = None
-                            self.current_player_chip_column = 0
-                        else: # The column is full
-                            self.column_full_sound.play()
-                            logging.info('{} column full'.format(self.current_player_chip_column))
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
+                            self.app.set_current_screen(menu.Menu, True)
+                        elif event.key == pygame.K_LEFT and self.current_player_chip: # Move chip to the left
+                            self._move_chip_left()
+                        elif event.key == pygame.K_RIGHT and self.current_player_chip: # Move chip to the right
+                            self._move_chip_right()
+                        elif event.key == pygame.K_DOWN and self.current_player_chip: # Drop the chip in the current column
+                            self._move_chip_down()
 
             status_text = self.current_player.name + ' player turn'
             status_color = self.current_player.color

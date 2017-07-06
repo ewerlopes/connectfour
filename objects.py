@@ -36,7 +36,7 @@ class Player:
         self.score = score
 
     @abstractmethod
-    def move(self):
+    def move(self, state, game_problem):
         """
         Defines the action to take. Return None in case the player is a human (allows for receive input).
         :return:
@@ -48,20 +48,23 @@ class RedPlayer(Player):
     def __init__(self):
         Player.__init__(self,RedChip,settings.COLORS.RED.value,'Red','RED',0)
 
-    def move(self):
+    def move(self, state, game_problem):
         pass
 
 class YellowPlayer(Player):
     def __init__(self):
         Player.__init__(self, YellowChip, settings.COLORS.YELLOW.value, 'Yellow', 'YELLOW', 0)
 
-    def move(self):
+    def move(self, state, game_problem):
         pass
 
 class AIPlayer(Player):
     def __init__(self):
         Player.__init__(self,YellowChip, settings.COLORS.YELLOW.value, 'Yellow', 'AI', 0)
 
-    def move(self,state, game, d=4, cutoff_test=None, eval_fn=heuristic.best_move_heuristic2):
-        move = adversarial_search.alphabeta_search(state, game, d=d, cutoff_test=cutoff_test, eval_fn=eval_fn)
+    def move(self,state, game):
+        move = adversarial_search.alphabeta_search(state, game,
+                                                   d=4,
+                                                   cutoff_test=None,
+                                                   eval_fn=heuristic.best_move_heuristic2)
         return (game.make_move(move, state), move)

@@ -167,7 +167,7 @@ def best_move_heuristic2(state):
         ally += calculate_best2(state.board, move, state.to_move, (-1,1))
         ally += calculate_best2(state.board, move, state.to_move, (-1,-1))
 
-        player = if_(state.to_move == 'X', 'O', 'X')
+        player = if_(state.to_move == 'R', 'Y', 'R')
 
         enemy += calculate_best2(state.board, move, player, (0,1))
         enemy += calculate_best2(state.board, move, player, (1,0))
