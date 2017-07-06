@@ -42,8 +42,8 @@ class Game:
 
         logging.info('Loading fonts')
 
-        self.title_font = utils.load_font('monofur.ttf', 22)
-        self.normal_font = utils.load_font('monofur.ttf', 16)
+        self.title_font = utils.load_font('Gidole-Regular.ttf', 22)
+        self.normal_font = utils.load_font('Gidole-Regular.ttf', 16)
 
         self.init_new_game()
 
