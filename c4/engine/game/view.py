@@ -44,7 +44,7 @@ class View:
         self.game_problem = Connect4()
         
         self.engine1 = engine_map['alphabeta']()
-        self.engine2 = engine_map['weighted']()
+        self.engine2 = engine_map['abdeep']()
         
         self.players = {
             Connect4.PLAYER1_ID: objects.RedPlayer(self.engine1),
