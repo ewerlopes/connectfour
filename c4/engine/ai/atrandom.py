@@ -11,7 +11,7 @@ class RandomEngine(Engine):
 
     def choose(self, board):
         moves = board.moves()
-        return random.choice(moves)
+        return atrandom.choice(moves)
 
     def __str__(self):
         return 'Random'

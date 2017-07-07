@@ -75,7 +75,7 @@ class NegamaxEngine(GreedyEngine):
 
     def endscore(self, board, ply):
         self.inc('leaves')
-        if board.end == Connect4.DRAW:
+        if board.end == Connect4.DRAW_ID:
             self.inc('draws')
             return [], 0
         else:

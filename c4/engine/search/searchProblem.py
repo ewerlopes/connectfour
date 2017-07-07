@@ -206,6 +206,28 @@ class Connect4(object):
             return Connect4.DRAW_ID
         else:
             return None
+        
+    @classmethod
+    def get_win_segment(cls, pos):
+        
+        def process(seg):
+            w_seg = {}
+            _indexes = np.arange(7 * 6).reshape((7, 6))
+            _indexes = np.rot90(_indexes)
+            for i in seg:
+                for row in range(0,6):
+                    for col in range(0,7):
+                        if _indexes[row][col] == i:
+                            w_seg[(row, col)] = True
+            return w_seg
+
+        for i,seg in enumerate(cls.segments(pos)):
+            c = np.bincount(seg)
+            if c[0]:
+                continue
+            if c[Connect4.PLAYER1_ID] == 4 or c[Connect4.PLAYER2_ID] == 4:
+                return process(utils.all_segments[i])
+                            
 
     @classmethod
     def _check_end_around(cls, pos, r, c, side):
@@ -224,6 +246,14 @@ class Connect4(object):
         else:
             pos = pos.flatten()
             return pos[utils.all_segments]
+
+    @classmethod
+    def rev_segments(cls, pos):
+        if isinstance(pos, Connect4):
+            return cls.rev_segments(pos._board)
+        else:
+            pos = pos.flatten()
+            return pos[utils.rev_segments]
 
     @classmethod
     def segments_around(cls, pos, r, c):

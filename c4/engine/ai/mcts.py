@@ -65,7 +65,7 @@ class MonteCarloTreeSearch(Engine):
             m = engine.choose(node)
             node = node.move(m)
 
-        if node.end == Connect4.DRAW:
+        if node.end == Connect4.DRAW_ID:
             return 0.5
         elif node.end == board.whose_turn_is_it:
             return 1

@@ -1,5 +1,5 @@
 from collections import deque
-import json
+
 from c4.engine.search.searchProblem import Connect4
 from c4.engine.ai import (
     GreedyEngine, WeightedGreedyEngine, RandomEngine,
@@ -43,7 +43,7 @@ class View:
 
         self.game_problem = Connect4()
         
-        self.engine1 = engine_map['greedy']()
+        self.engine1 = engine_map['alphabeta']()
         self.engine2 = engine_map['weighted']()
         
         self.players = {
@@ -91,8 +91,7 @@ class View:
 
         self.previous_move_failed = False
         
-        self.highlighted_chips = [[None for x in range(0,settings.ROWS)]
-                                  for y in range(0,settings.COLS)]
+        self.highlighted_chips = {}
 
         logging.info('Loading random music')
         utils.load_random_music(['techno_dreaming.wav', 'techno_celebration.wav', 'electric_rain.wav', 'snake_trance.wav'], volume=self.musics_volume)
@@ -107,7 +106,7 @@ class View:
         board = self.game_problem.get_board()
         for x in range(0, settings.COLS):
             for y in range(0, settings.ROWS):
-                if board[y][x] is True:
+                if (y,x) in self.highlighted_chips.keys() and self.highlighted_chips[(y,x)]:
                     image = self.board_cell_highlighted_image
                 else:
                     image = self.board_cell_image
@@ -266,10 +265,14 @@ class View:
                 self.current_player = self.players[self.game_problem.whose_turn_is_it]
                 logging.info('Starting new player turn')
             elif self.game_problem.end == Connect4.PLAYER1_ID or self.game_problem.end == Connect4.PLAYER2_ID:
+                pygame.mixer.music.stop()
+                self.win_sound.play()
                 self.program_state = settings.GAME_STATES.WON
                 pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
                 logging.info(self.current_player.name + ' WINS!')
                 self.current_player.score += 1
+                self.highlighted_chips = Connect4.get_win_segment(self.game_problem._board)
+
             
         elif self.program_state == settings.GAME_STATES.WON:
             for event in pygame.event.get():
@@ -279,14 +282,13 @@ class View:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(menu.Menu, True)
+                        pygame.quit()
+                        sys.exit()
                     elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.new_game()
                 elif event.type == settings.EVENTS.WINNER_CHIPS_EVENT.value:
-                    for x in range(0, settings.COLS):
-                        for y in range(0, settings.ROWS):
-                            if isinstance(self.highlighted_chips[x][y], bool):
-                                self.highlighted_chips[x][y] = not self.highlighted_chips[x][y]
+                    for k in self.highlighted_chips.keys():
+                        self.highlighted_chips[k] = not self.highlighted_chips[k]
 
                     pygame.time.set_timer(settings.EVENTS.WINNER_CHIPS_EVENT.value, 600)
 
@@ -300,7 +302,8 @@ class View:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE: # The user want to go back to the game menu
-                        self.app.set_current_screen(menu.Menu, True)
+                        pygame.quit()
+                        sys.exit()
                     elif event.key == pygame.K_RETURN: # Pressing the Return key will start a new game
                         self.new_game()
 
