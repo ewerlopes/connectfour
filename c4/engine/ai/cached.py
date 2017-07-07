@@ -1,5 +1,5 @@
-from c4.evaluate import INF
-from c4.cache import Cache
+from c4.engine.game.evaluate import INF
+from c4.engine.game.cache import Cache
 
 
 class CachedEngineMixin(object):

@@ -1,7 +1,7 @@
-from c4.evaluate import INF
-from c4.engine.alphabeta import AlphaBetaEngine
-from c4.engine.cached import CachedEngineMixin
-from c4.engine.deepening import IterativeDeepeningEngineMixin
+from c4.engine.game.evaluate import INF
+from c4.engine.ai.alphabeta import AlphaBetaEngine
+from c4.engine.ai.cached import CachedEngineMixin
+from c4.engine.ai.deepening import IterativeDeepeningEngineMixin
 
 
 class PVSEngine(AlphaBetaEngine):

@@ -1,9 +1,9 @@
 import time
 from collections import defaultdict
 
-from c4.board import DRAW
-from c4.evaluate import INF
-from c4.engine.greedy import GreedyEngine
+from c4.engine.search.searchProblem import Connect4
+from c4.engine.game.evaluate import INF
+from c4.engine.ai.greedy import GreedyEngine
 
 
 class NegamaxEngine(GreedyEngine):
@@ -75,7 +75,7 @@ class NegamaxEngine(GreedyEngine):
 
     def endscore(self, board, ply):
         self.inc('leaves')
-        if board.end == DRAW:
+        if board.end == Connect4.DRAW:
             self.inc('draws')
             return [], 0
         else:

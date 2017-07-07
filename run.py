@@ -1,10 +1,8 @@
 import logging
 import os
 import sys
-
 import click
 import pygame
-
 from c4.engine.game.app import App
 
 

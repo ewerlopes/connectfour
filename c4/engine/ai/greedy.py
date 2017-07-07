@@ -1,8 +1,8 @@
 import numpy as np
 
-from c4.evaldiff import evaldiff
-from c4.engine.base import Engine
-from c4.evaluate import Evaluator, INF
+from c4.engine.game.evaldiff import evaldiff
+from c4.engine.ai.base import Engine
+from c4.engine.game.evaluate import Evaluator, INF
 
 
 class GreedyEngine(Engine):

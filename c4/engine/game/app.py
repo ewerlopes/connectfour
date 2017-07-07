@@ -4,7 +4,7 @@ import os
 import pygame
 from configparser import ConfigParser
 
-from c4.engine.game import game, utils, settings
+from c4.engine.game import view, utils, settings
 
 
 class App:
@@ -21,7 +21,7 @@ class App:
         pygame.display.set_icon(utils.load_image('icon.png'))
 
         self.load_config()
-        self.set_current_screen(game.Game)
+        self.set_current_screen(view.View)
 
     def load_config(self):
         logging.info('Loading configuration')

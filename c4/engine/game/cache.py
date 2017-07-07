@@ -1,6 +1,6 @@
 from collections import namedtuple, OrderedDict
 
-from c4.evaluate import INF
+from c4.engine.game.evaluate import INF
 
 
 Entry = namedtuple('Entry', 'move depth score state')

@@ -2,9 +2,9 @@ import math
 import random
 from collections import defaultdict
 
-from c4.evaluate import DRAW
-from c4.engine.base import Engine
-from c4.engine.greedy import WeightedGreedyEngine
+from c4.engine.search.searchProblem import Connect4
+from c4.engine.ai.base import Engine
+from c4.engine.ai.greedy import WeightedGreedyEngine
 
 
 class MonteCarloTreeSearch(Engine):
@@ -65,9 +65,9 @@ class MonteCarloTreeSearch(Engine):
             m = engine.choose(node)
             node = node.move(m)
 
-        if node.end == DRAW:
+        if node.end == Connect4.DRAW:
             return 0.5
-        elif node.end == board.get_next_to_move:
+        elif node.end == board.whose_turn_is_it:
             return 1
         else:
             return 0

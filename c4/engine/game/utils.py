@@ -8,8 +8,6 @@ import settings
 
 def _get_resource_path(res_type, filename):
     path = os.path.join(settings.RESOURCES_ROOT, res_type, filename)
-    print os.getcwd()
-    print path
 
     if not os.path.isfile(path):
         raise ValueError('The file ' + path + ' doesn\'t exist')

@@ -1,7 +1,7 @@
 import random
 
-from c4.evaluate import Evaluator
-from c4.engine.base import Engine
+from c4.engine.game.evaluate import Evaluator
+from c4.engine.ai.base import Engine
 
 
 class RandomEngine(Engine):
